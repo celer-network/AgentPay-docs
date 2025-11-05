@@ -39,7 +39,7 @@
             window.path_to_searchindex_js = "../../searchindex-77d117d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-1e3a0241.js"></script>
+        <script src="../../toc-893e7167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -196,19 +196,19 @@
 <h3 id="set-up-end-to-end-conditional-payment"><a class="header" href="#set-up-end-to-end-conditional-payment"><strong>Set up end-to-end conditional payment</strong></a></h3>
 <p>The setup process for an end-to-end multi-hop conditional payment is the same for both boolean and numeric conditions.</p>
 <p>The figure below illustrates the message flow where payment source <strong>A</strong> sends a conditional payment to destination <strong>D</strong> through relay nodes <strong>B</strong> and <strong>C</strong>.</p>
-<figure><img src="../../.gitbook/assets/e2e-pay-setup.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/e2e-pay-setup.png" alt=""><figcaption></figcaption></p>
 <p>The conditional payment is established sequentially through simplex channels <strong>A–B</strong>, <strong>B–C</strong>, and <strong>C–D</strong>, following the <a href="single-hop-protocols.html#send-conditional-payment"><em>Send Conditional Payment</em></a> procedure described earlier.</p>
 <p>After the destination <strong>D</strong> receives the <code>CondPayRequest</code> from <strong>C</strong>, it sends a <code>CondPayReceipt</code> message directly back to the source <strong>A</strong>, confirming end-to-end receipt of the conditional payment. At this point, the setup process is complete if the payment does not include a hash-lock condition.</p>
 <p>If a hash lock condition is present, the source <strong>A</strong> must then reveal the preimage of the hash lock to <strong>D</strong> via a <code>RevealSecret</code> message. The end-to-end setup is finalized once <strong>A</strong> receives the corresponding <code>RevealSecretAck</code> from <strong>D</strong>.</p>
 <h3 id="source-pays-in-full-amount-on-true-outcome"><a class="header" href="#source-pays-in-full-amount-on-true-outcome"><strong>Source pays in full amount on true outcome</strong></a></h3>
 <p>Once the conditional payment is successfully set up, the nodes along the route cooperatively settle the payment hop by hop.</p>
 <p>The figure below shows the message flow when the payment source initiates settlement by paying the full amount to its peer. This can occur immediately after <strong>A</strong> receives the <code>RevealSecretAck</code> for a payment protected by a single hash lock, or after the associated CelerApp boolean conditions are finalized (off-chain) as <em>true</em>.</p>
-<figure><img src="../../.gitbook/assets/e2e-pay-full.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/e2e-pay-full.png" alt=""><figcaption></figcaption></p>
 <p>As shown above, when the condition evaluates to <em>true</em>, settlement begins from the payment source (<strong>A</strong>) and proceeds downstream toward the destination (<strong>D</strong>).</p>
 <p>Each relay node (<strong>B</strong>, <strong>C</strong>) transfers the full amount to its downstream peer only after receiving the same amount from its upstream peer. This ensures that every relay can forward the payment safely without evaluating any conditions or making on-chain queries, preserving both simplicity and trustlessness.</p>
 <h3 id="destination-rejects-the-payment-on-false-outcome"><a class="header" href="#destination-rejects-the-payment-on-false-outcome"><strong>Destination rejects the payment on false outcome</strong></a></h3>
 <p>The figure below shows the message flow when the payment destination rejects the conditional payment. This occurs after the associated boolean conditions are finalized (off-chain) as <em>false</em>.</p>
-<figure><img src="../../.gitbook/assets/e2e-pay-reject.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/e2e-pay-reject.png" alt=""><figcaption></figcaption></p>
 <p>When a conditional payment should not be paid, cooperative off-chain settlement begins from the payment destination (<strong>D</strong>) and proceeds upstream toward the source (<strong>A</strong>).</p>
 <p>Each relay node (<strong>B</strong>, <strong>C</strong>) rejects the payment from its upstream peer only after confirming that the payment has already been canceled with its downstream peer. This ensures that every relay can safely clear the payment without evaluating conditions or performing on-chain queries.</p>
 <p>A rejection flow may also be initiated by a relay node (<strong>B</strong> or <strong>C</strong>) if it has already accepted the conditional payment from its upstream peer but fails to forward it to its downstream peer.</p>
@@ -216,7 +216,7 @@
 <p>The above sections described the cooperative end-to-end message flows for setting up and settling a conditional payment. If any node along the routing path behaves <strong>uncooperatively</strong>, <strong>an on-chain dispute</strong> can be triggered.</p>
 <p>For payments with <strong>boolean conditions</strong>, relay nodes never need to initiate disputes, since they face no security risk while forwarding payments. Only the <strong>payment source</strong> or <strong>destination</strong> may need to dispute, depending on which side is affected by misbehavior.</p>
 <p>The figure below illustrates a case where the payment destination (<strong>D</strong>) starts an on-chain dispute because it did not receive the full payment amount, possibly due to a failure or malicious action by an upstream node (<strong>A</strong>, <strong>B</strong>, or <strong>C</strong>).</p>
-<figure><img src="../../.gitbook/assets/e2e-boolean-dispute.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/e2e-boolean-dispute.png" alt=""><figcaption></figcaption></p>
 <p>If the destination <strong>D</strong> does not receive the expected settlement, it can submit an on-chain transaction to resolve the payment by conditions. Once the payment result is finalized in the <strong>PayRegistry</strong>, <strong>D</strong> sends a <code>PaymentSettleProof</code> message to its upstream peer (<strong>C</strong>) to request settlement.</p>
 <p>Upon receiving the settle proof, <strong>C</strong> verifies <strong>D</strong>’s claim by querying the <strong>PayRegistry</strong>, and then sends a <code>PaymentSettleRequest</code> to <strong>D</strong> to pay the resolved amount. This settle proof is then passed further upstream, with each relay repeating the same process hop by hop until reaching the source <strong>A</strong>.</p>
 <p>If any upstream node (<strong>A</strong>, <strong>B</strong>, or <strong>C</strong>) remains uncooperative even after on-chain resolution, the downstream peer can choose to close the payment channel. Throughout the entire process, relay nodes never need to perform any payment-related on-chain transactions.</p>
@@ -241,12 +241,12 @@
 <p>The setup process for an end-to-end multi-hop payment with numeric conditions is identical to that of <a href="end-to-end-protocols.html#pay-with-boolean-conditions">boolean conditions</a>. Each hop sequentially establishes its conditional payment using the same off-chain message flow (<code>CondPayRequest</code> and <code>CondPayResponse</code>), ensuring consistent state updates and compatibility across all channel peers.</p>
 <h3 id="settle-the-payment-hop-by-hop-upstream"><a class="header" href="#settle-the-payment-hop-by-hop-upstream"><strong>Settle the payment hop-by-hop upstream</strong></a></h3>
 <p>The figure below illustrates the cooperative settlement flow for payments with numeric conditions when all nodes behave honestly. The process begins at the payment destination (<em>D</em>) once the final payment result is determined to be a value between zero and the maximum amount.</p>
-<figure><img src="../../.gitbook/assets/e2e-vouch (1).png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/e2e-vouch (1).png" alt=""><figcaption></figcaption></p>
 <p>The destination <em>D</em> first sends a <code>PayResultVouchRequest</code> to the payment source <em>A</em>, producing a co-signed <a href="../on-chain-contracts/channel-operations.html#resolve-payment-by-vouched-result">VouchedCondPayResult</a> that confirms both parties agree on the payment outcome. Then, <em>D</em> sends a <code>PaymentSettleProof</code> message to its upstream peer <em>C</em>, using the vouched result as proof. <em>C</em> verifies that the payment is not finalized at a smaller amount by querying the PayRegistry, then pays <em>D</em> the vouched amount off-chain. After receiving the settlement response, <em>C</em> forwards the same vouched result upstream to <em>B</em>, which repeats the same process. Finally, <em>A</em> settles with <em>B</em> directly without querying the registry, since <em>A</em> is itself the payment source that signed the vouched result.</p>
 <p>Relay nodes perform the <strong>PayRegistry check</strong> to protect themselves against potential collusion between the payment source and destination — ensuring they never pay a downstream peer more than what can be safely recovered upstream.</p>
 <h3 id="dispute-the-payment-with-vouched-result"><a class="header" href="#dispute-the-payment-with-vouched-result">Dispute the payment with vouched result</a></h3>
 <p>After a relay node pays its downstream peer the vouched amount, it must ensure it can receive the same amount from its upstream peer. If this does not occur in time—or if the relay detects that the payment has been maliciously resolved on-chain to a smaller amount—it can initiate an on-chain dispute using the co-signed vouched result.</p>
-<figure><img src="../../.gitbook/assets/e2e-vouch-dispute.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/e2e-vouch-dispute.png" alt=""><figcaption></figcaption></p>
 <p>In the example shown, relay node <em>C</em> disputes the payment on-chain after paying <em>D</em> the vouched amount but failing to receive settlement from <em>B</em>. <em>C</em> submits a transaction to resolve the payment by vouched result. The <strong>PayResolver</strong> contract guarantees that the finalized result in the <strong>PayRegistry</strong> will never be smaller than the vouched amount submitted by <em>C</em>, ensuring that <em>C</em> can always recover at least what it has paid out.</p>
 <p>Once the payment result is finalized in the registry, <em>C</em> sends a <code>PaymentSettleProof</code> message to its upstream peer to claim the resolved amount. The remaining settlement flow proceeds identically to the on-chain dispute case for payments with boolean conditions.</p>
 <p>This protocol ensures that <strong>each relay node is guaranteed to receive from upstream an amount equal to or greater than what it has paid downstream</strong>, maintaining strong security even under partial cooperation or malicious behavior.</p>

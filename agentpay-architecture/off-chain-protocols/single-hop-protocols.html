@@ -39,7 +39,7 @@
             window.path_to_searchindex_js = "../../searchindex-77d117d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-1e3a0241.js"></script>
+        <script src="../../toc-893e7167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -187,7 +187,7 @@
 <hr>
 <h3 id="send-conditional-payment"><a class="header" href="#send-conditional-payment">Send Conditional Payment</a></h3>
 <p>Sending a conditional payment involves creating a new co-signed <a href="../on-chain-contracts/core-data-structures.html#simplex-channel-state">simplex channel state</a> that adds a new entry to the pending pay list (field 5) and updates related metadata. The process requires one round trip of two off-chain messages — <code>CondPayRequest</code> and <code>CondPayResponse</code>.</p>
-<figure><img src="../../.gitbook/assets/send-cond-pay.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/send-cond-pay.png" alt=""><figcaption></figcaption></p>
 <p><strong><code>CondPayRequest</code></strong> — sent by the peer initiating or forwarding a conditional payment. It includes:</p>
 <ul>
 <li><strong>Payment data</strong> — the immutable conditional payment message defined by the payment source.</li>
@@ -204,7 +204,7 @@
 <h3 id="settle-conditional-payment"><a class="header" href="#settle-conditional-payment">Settle Conditional Payment</a></h3>
 <p>Once a conditional payment’s outcome is finalized, the two peers can cooperatively settle it off-chain. Settlement involves creating a new co-signed simplex channel state that removes the corresponding payment ID from the pending list (field 5), updates the transferred amount (field 4), and refreshes other relevant metadata.</p>
 <p>The process uses up to three off-chain messages — <code>PaymentSettleRequest</code>, <code>PaymentSettleResponse</code>, and (optionally) <code>PaymentSettleProof</code>, which is used when the receiving peer initiates the settlement.</p>
-<figure><img src="../../.gitbook/assets/settle-cond-pay.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/settle-cond-pay.png" alt=""><figcaption></figcaption></p>
 <p><strong><code>PaymentSettleRequest</code></strong> is sent by the <code>peer_from</code> side of the channel to clear one or more payments. It includes:</p>
 <ul>
 <li><strong>Payments to be settled</strong> — a list of payment IDs, their settlement reasons (e.g., fully paid, vouched, expired, rejected, on-chain resolved), and the settled amounts.</li>
@@ -225,7 +225,7 @@
 <h3 id="sliding-window-protocol"><a class="header" href="#sliding-window-protocol">Sliding Window Protocol</a></h3>
 <p>The previous section described the basic single-hop message flow between two channel peers for cooperative simplex state updates. Similar to standard communication systems, if the <em>peer_from</em> sender waits for a response before sending the next request, throughput is limited by the round-trip time. To improve performance, AgentPay applies a customized <a href="https://en.wikipedia.org/wiki/Sliding_window_protocol">sliding window protocol</a> for concurrent off-chain state updates.</p>
 <p>Unlike TCP or other data transmission protocols, simplex state update messages are not independent packets — each new message depends on the previous simplex state. This means one invalid message invalidates all subsequent messages derived from it. AgentPay modifies the traditional sliding window design to support these dependencies while still achieving high concurrency and throughput.</p>
-<figure><img src="../../.gitbook/assets/sliding-window.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/sliding-window.png" alt=""><figcaption></figcaption></p>
 <p>The figure above illustrates the sliding window workflow under two types of failures: message loss and request rejection. <strong>S</strong> represents the new simplex state, <strong>b</strong> the base sequence number, and <strong>R</strong> the request type (e.g., send or settle). For example, “<em>S7,b4,R5</em>” denotes a message carrying a one-signed simplex state with sequence number 7, built on the previous state 4, for request R5. <strong>A</strong> denotes acknowledgment (ACK), and <strong>N</strong> denotes negative acknowledgment (NACK). AgentPay assumes messages may be lost but are always delivered in order, as guaranteed by the underlying transport layer (e.g., <a href="https://grpc.io/">gRPC</a>).</p>
 <h4 id="receiver-protocol"><a class="header" href="#receiver-protocol">Receiver protocol</a></h4>
 <p>On the receiving side, suppose the latest co-signed simplex state has sequence number <strong>n</strong>, and the incoming one-signed state has sequence <strong>s</strong> and base <strong>b</strong>. The receiver follows these rules:</p>

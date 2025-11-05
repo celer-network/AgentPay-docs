@@ -39,7 +39,7 @@
             window.path_to_searchindex_js = "../searchindex-77d117d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-1e3a0241.js"></script>
+        <script src="../toc-893e7167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -202,7 +202,7 @@ interface INumericOutcome {
 <p>To illustrate, consider a simple example with two participants (or AI agents) interacting in an App channel that represents a competitive or cooperative task. When the App outcome is finalized—such as determining the winner of a game, verifying a ZK-proof, or completing a joint computation—AgentPay automatically settles payments according to the predefined conditions.</p>
 <p>For simplicity, this section uses a two-player game as the example: both players lock funds into an AgentPay channel, and conditional payments are made based on who wins. More complex cases, including multi-party collaborations, tiered numeric payouts, or probabilistic reward distributions, follow the same workflow pattern.</p>
 <h3 id="play-the-game-with-conditional-payments-to-the-winner"><a class="header" href="#play-the-game-with-conditional-payments-to-the-winner"><strong>Play the Game with Conditional Payments to the Winner</strong></a></h3>
-<figure><img src="../.gitbook/assets/app-send-pay.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../.gitbook/assets/app-send-pay.png" alt=""><figcaption></figcaption></p>
 <p>Figure above shows the message flow during the game setup and playing phase. <em>A</em> and <em>D</em> are players of an off-chain game App channel. Black lines represent messages related to game logic, while purple and orange lines represent conditional payment messages from <em>A</em> and <em>D</em>, respectively. Dashed lines indicate direct communication between <em>A</em> and <em>D</em>, without involving relay nodes.</p>
 <p>The steps are summarized as follows:</p>
 <ol>
@@ -212,11 +212,11 @@ interface INumericOutcome {
 </ol>
 <p><strong>Note on state progression:</strong> The integrated workflow is agnostic to how App states evolve or settle. Any App channel logic or state progression protocol can be seamlessly supported within this framework.</p>
 <h3 id="settle-the-payments-when-the-loser-is-cooperative"><a class="header" href="#settle-the-payments-when-the-loser-is-cooperative"><strong>Settle the Payments When the Loser Is Cooperative</strong></a></h3>
-<figure><img src="../.gitbook/assets/app-settle-pay.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../.gitbook/assets/app-settle-pay.png" alt=""><figcaption></figcaption></p>
 <p>Figure above shows the message flow when <em>A</em>, after losing the game off-chain, follows the protocol to settle payments cooperatively. The honest loser <em>A</em> initiates the settlement of both conditional payments: <a href="off-chain-protocols/end-to-end-protocols.html#source-pays-in-full-amount-on-true-outcome">paying the full amount</a> for its own conditional payment to <em>D</em>, and <a href="off-chain-protocols/end-to-end-protocols.html#destination-rejects-the-payment-on-false-outcome">rejecting the conditional payment</a> from <em>D</em>. The workflow completes once the winner <em>D</em> confirms settlement of both payments.</p>
 <p><strong>There are zero on-chain transactions throughout the entire lifecycle</strong>—from when the two players agree to play the game, to the final prize distribution—so long as all participants behave cooperatively. The App contract and its logic remain purely virtual and only need to appear on-chain in the rare case of a dispute.</p>
 <h3 id="settle-the-payments-when-the-loser-is-uncooperative"><a class="header" href="#settle-the-payments-when-the-loser-is-uncooperative"><strong>Settle the Payments When the Loser Is Uncooperative</strong></a></h3>
-<figure><img src="../.gitbook/assets/app-dispute-pay.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../.gitbook/assets/app-dispute-pay.png" alt=""><figcaption></figcaption></p>
 <p>Figure above shows the message flow when <em>A</em> loses the game but refuses to settle the conditional payments off-chain. To claim the prize, the winner <em>D</em> initiates a dispute, resolves the payment on-chain, and completes settlement with its upstream peer. <strong>Relay nodes (</strong><em><strong>B</strong></em><strong> and </strong><em><strong>C</strong></em><strong>) never need to perform any on-chain transactions</strong>, even when the end players (<em>A</em> and <em>D</em>) fail to cooperate.</p>
 <p>The workflow proceeds as follows:</p>
 <ol>

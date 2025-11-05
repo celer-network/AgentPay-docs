@@ -39,7 +39,7 @@
             window.path_to_searchindex_js = "../../searchindex-77d117d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-1e3a0241.js"></script>
+        <script src="../../toc-893e7167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -176,7 +176,7 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="contracts-architecture"><a class="header" href="#contracts-architecture">Contracts Architecture</a></h1>
-<figure><img src="../../.gitbook/assets/Screenshot 2025-10-29 at 11.26.58 PM (1).png" alt=""><figcaption></figcaption></figure>
+<p><img src="../../.gitbook/assets/Screenshot 2025-10-29 at 11.26.58 PM (1).png" alt=""><figcaption></figcaption></p>
 <p>The figure above illustrates the AgentPay on-chain contract architecture. The white dashed boxes at the bottom represent user-side off-chain components. Each colored rectangle denotes an individual on-chain contract: blue modules are <strong>AgentPay core contracts</strong> (those with dashed borders are <em>versioned contracts</em> that can evolve over time through peer-agreed migration), while green modules represent <strong>external condition contracts</strong> defined by applications. Orange arrows indicate inter-contract function calls with their primary purpose, and black arrows show user interactions from Agent nodes.</p>
 <p>The modular design separates critical asset custody from evolving business logic, enabling safer upgrades and clearer responsibilities. This section provides a high-level overview of all AgentPay contracts and their relationships. The detailed channel operations and workflows are described later in the <a href="channel-operations.html">Channel Operations</a> section.</p>
 <h3 id="celerwallet"><a class="header" href="#celerwallet">CelerWallet</a></h3>

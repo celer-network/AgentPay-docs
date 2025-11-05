@@ -39,7 +39,7 @@
             window.path_to_searchindex_js = "../searchindex-77d117d9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-1e3a0241.js"></script>
+        <script src="../toc-893e7167.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -180,7 +180,7 @@
 <p>The system architecture separates payment execution, application logic, and network routing into distinct but interoperable layers. This modular design ensures high throughput, minimal latency, and flexible integration with a wide variety of blockchain ecosystems and AI-agent frameworks.</p>
 <hr>
 <h3 id="system-architecture"><a class="header" href="#system-architecture">System Architecture </a></h3>
-<figure><img src="../.gitbook/assets/Screenshot 2025-10-29 at 10.57.23 AM.png" alt=""><figcaption></figcaption></figure>
+<p><img src="../.gitbook/assets/Screenshot 2025-10-29 at 10.57.23 AM.png" alt=""><figcaption></figcaption></p>
 <p>The figure above illustrates the high-level architecture of the AgentPay network. It consists of three main components: the <strong>payment channel</strong>, the <strong>app channel</strong>, and the <strong>nodes connected by these channels</strong>. Together they enable secure, low-latency economic interactions off-chain, with on-chain settlement only when necessary.</p>
 <p><strong>Payment channel.</strong> This is the hop-by-hop value-transfer layer, combining on-chain channel contracts with an off-chain payment protocol. The shared contracts keep only minimal states for each adjacent pair of peers, while the off-chain protocol defines how peers exchange and advance signed states and when to invoke the rare on-chain calls. Payments can carry <em>arbitrary conditions based on on-chain-verifiable states</em>, enabling programmable logic such as “pay if result verified” or “release tokens once oracle confirms.” Multi-hop routing allows a payment to traverse a path of channels (e.g., A→B→C→D) with instant off-chain finality at each hop and enforceability on-chain if disputed.</p>
 <p><strong>App channel.</strong> This is the application-logic layer, combining end-to-end app contracts with a virtual off-chain channel protocol between the session participants. Dashed lines in the figure above indicate these <em>virtual modules, which connect agents directly without intermediate hops or on-chain initialization</em>. App channels express arbitrary logic—such as inference fulfillment, data delivery, or API metering—and expose a standard query interface so that payment conditions can depend on app outcomes. An on-chain contract is only deployed if a dispute arises, allowing agents to execute complex application logic entirely off-chain while keeping costs low and interactions efficient.</p>
