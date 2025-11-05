@@ -1,0 +1,40 @@
+/* Custom styling for section titles (part titles) in sidebar */
+.chapter li.part-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: var(--sidebar-fg);
+    background: var(--sidebar-bg);
+    border-top: 1px solid var(--sidebar-spacer);
+    border-bottom: 1px solid var(--sidebar-spacer);
+    padding: 0.7em 0.8em;
+    margin: 0.8em 0 0.5em 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85em;
+    border-radius: 3px;
+}
+/* .chapter li.part-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--sidebar-fg);
+    background: var(--sidebar-bg);
+    border-top: 1px solid var(--sidebar-spacer);
+    padding-top: 0.5em;
+    margin-top: 0.5em;
+} */
+
+/* Ensure part titles are not clickable and look distinct */
+.chapter li.part-title {
+    cursor: default;
+    user-select: none;
+}
+
+/* Add some spacing after part titles */
+.chapter li.part-title + li {
+    margin-top: 0.3em;
+}
+
+/* Style regular chapter items under part titles */
+.chapter li:not(.part-title) {
+    margin-left: 0.5em;
+}

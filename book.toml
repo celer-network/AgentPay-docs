@@ -1,0 +1,9 @@
+[book]
+title = "AgentPay"
+authors = ["jie"]
+language = "en"
+
+[output.html]
+theme = "theme"
+additional-css = ["theme/custom.css"]
+site-url = "/"
