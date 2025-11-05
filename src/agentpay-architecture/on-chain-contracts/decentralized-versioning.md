@@ -54,7 +54,7 @@ message ChannelMigrationInfo {
 
 Anyone can complete the migration by submitting this message to the **new** CelerLedger’s `migrateChannelFrom` API.
 
-<figure><img src="../../.gitbook/assets/upgrade-ledger.png" alt=""><figcaption></figcaption></figure>
+<img src="../../.gitbook/assets/upgrade-ledger.png" alt=""><figcaption></figcaption>
 
 As illustrated above, the migration consists of four inter-contract calls within one transaction:
 

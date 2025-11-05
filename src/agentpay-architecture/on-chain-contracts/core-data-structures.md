@@ -6,7 +6,7 @@ We first introduce the core structural elements of AgentPay, which center on two
 
 ## Duplex Payment Channel
 
-<figure><img src="../../.gitbook/assets/channel-duplex.png" alt=""><figcaption></figcaption></figure>
+<img src="../../.gitbook/assets/channel-duplex.png" alt=""><figcaption></figcaption>
 
 The figure above illustrates the logical data model of an AgentPay state channel between two peers, Alice and Bob. Not all information shown here resides on-chain. The model consists of two types of peer-related data:
 

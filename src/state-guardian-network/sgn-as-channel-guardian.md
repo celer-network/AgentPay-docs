@@ -8,7 +8,7 @@ Once registered, SGN validators collectively store cryptographic commitments of 
 
 ## Service Flow
 
-<figure><img src="../.gitbook/assets/guardian.png" alt=""><figcaption></figcaption></figure>
+<img src="../.gitbook/assets/guardian.png" alt=""><figcaption></figcaption>
 
 Figure above illustrates the basic Channel Guardian service flow. The numbers in parentheses indicate the sequence of events:
 

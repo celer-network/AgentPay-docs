@@ -17,7 +17,7 @@ Because both simplex directions operate independently yet symmetrically, the fol
 
 Sending a conditional payment involves creating a new co-signed [simplex channel state](../on-chain-contracts/core-data-structures.md#simplex-channel-state) that adds a new entry to the pending pay list (field 5) and updates related metadata. The process requires one round trip of two off-chain messages — `CondPayRequest` and `CondPayResponse`.
 
-<figure><img src="../../.gitbook/assets/send-cond-pay.png" alt=""><figcaption></figcaption></figure>
+<img src="../../.gitbook/assets/send-cond-pay.png" alt=""><figcaption></figcaption>
 
 **`CondPayRequest`** — sent by the peer initiating or forwarding a conditional payment. It includes:
 
@@ -39,7 +39,7 @@ Once a conditional payment’s outcome is finalized, the two peers can cooperati
 
 The process uses up to three off-chain messages — `PaymentSettleRequest`, `PaymentSettleResponse`, and (optionally) `PaymentSettleProof`, which is used when the receiving peer initiates the settlement.
 
-<figure><img src="../../.gitbook/assets/settle-cond-pay.png" alt=""><figcaption></figcaption></figure>
+<img src="../../.gitbook/assets/settle-cond-pay.png" alt=""><figcaption></figcaption>
 
 **`PaymentSettleRequest`** is sent by the `peer_from` side of the channel to clear one or more payments. It includes:
 
@@ -70,7 +70,7 @@ The previous section described the basic single-hop message flow between two cha
 
 Unlike TCP or other data transmission protocols, simplex state update messages are not independent packets — each new message depends on the previous simplex state. This means one invalid message invalidates all subsequent messages derived from it. AgentPay modifies the traditional sliding window design to support these dependencies while still achieving high concurrency and throughput.
 
-<figure><img src="../../.gitbook/assets/sliding-window.png" alt=""><figcaption></figcaption></figure>
+<img src="../../.gitbook/assets/sliding-window.png" alt=""><figcaption></figcaption>
 
 The figure above illustrates the sliding window workflow under two types of failures: message loss and request rejection. **S** represents the new simplex state, **b** the base sequence number, and **R** the request type (e.g., send or settle). For example, “_S7,b4,R5_” denotes a message carrying a one-signed simplex state with sequence number 7, built on the previous state 4, for request R5. **A** denotes acknowledgment (ACK), and **N** denotes negative acknowledgment (NACK). AgentPay assumes messages may be lost but are always delivered in order, as guaranteed by the underlying transport layer (e.g., [gRPC](https://grpc.io/)).
 

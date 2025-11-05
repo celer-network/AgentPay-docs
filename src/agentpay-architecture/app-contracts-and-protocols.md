@@ -42,7 +42,7 @@ For simplicity, this section uses a two-player game as the example: both players
 
 ### **Play the Game with Conditional Payments to the Winner**
 
-<figure><img src="../.gitbook/assets/app-send-pay.png" alt=""><figcaption></figcaption></figure>
+<img src="../.gitbook/assets/app-send-pay.png" alt=""><figcaption></figcaption>
 
 Figure above shows the message flow during the game setup and playing phase. _A_ and _D_ are players of an off-chain game App channel. Black lines represent messages related to game logic, while purple and orange lines represent conditional payment messages from _A_ and _D_, respectively. Dashed lines indicate direct communication between _A_ and _D_, without involving relay nodes.
 
@@ -56,7 +56,7 @@ The steps are summarized as follows:
 
 ### **Settle the Payments When the Loser Is Cooperative**
 
-<figure><img src="../.gitbook/assets/app-settle-pay.png" alt=""><figcaption></figcaption></figure>
+<img src="../.gitbook/assets/app-settle-pay.png" alt=""><figcaption></figcaption>
 
 Figure above shows the message flow when _A_, after losing the game off-chain, follows the protocol to settle payments cooperatively. The honest loser _A_ initiates the settlement of both conditional payments: [paying the full amount](off-chain-protocols/end-to-end-protocols.md#source-pays-in-full-amount-on-true-outcome) for its own conditional payment to _D_, and [rejecting the conditional payment](off-chain-protocols/end-to-end-protocols.md#destination-rejects-the-payment-on-false-outcome) from _D_. The workflow completes once the winner _D_ confirms settlement of both payments.
 
@@ -64,7 +64,7 @@ Figure above shows the message flow when _A_, after losing the game off-chain, f
 
 ### **Settle the Payments When the Loser Is Uncooperative**
 
-<figure><img src="../.gitbook/assets/app-dispute-pay.png" alt=""><figcaption></figcaption></figure>
+<img src="../.gitbook/assets/app-dispute-pay.png" alt=""><figcaption></figcaption>
 
 Figure above shows the message flow when _A_ loses the game but refuses to settle the conditional payments off-chain. To claim the prize, the winner _D_ initiates a dispute, resolves the payment on-chain, and completes settlement with its upstream peer. **Relay nodes (**_**B**_**&#x20;and&#x20;**_**C**_**) never need to perform any on-chain transactions**, even when the end players (_A_ and _D_) fail to cooperate.
 

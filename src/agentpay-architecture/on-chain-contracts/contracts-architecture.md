@@ -1,6 +1,6 @@
 # Contracts Architecture
 
-<figure><img src="../../.gitbook/assets/Screenshot 2025-10-29 at 11.26.58 PM (1).png" alt=""><figcaption></figcaption></figure>
+<img src="../../.gitbook/assets/Screenshot 2025-10-29 at 11.26.58 PM (1).png" alt=""><figcaption></figcaption>
 
 The figure above illustrates the AgentPay on-chain contract architecture. The white dashed boxes at the bottom represent user-side off-chain components. Each colored rectangle denotes an individual on-chain contract: blue modules are **AgentPay core contracts** (those with dashed borders are _versioned contracts_ that can evolve over time through peer-agreed migration), while green modules represent **external condition contracts** defined by applications. Orange arrows indicate inter-contract function calls with their primary purpose, and black arrows show user interactions from Agent nodes.
 

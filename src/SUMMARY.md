@@ -1,10 +1,10 @@
 # Table of contents
 
-## AgentPay Introduction
+# AgentPay Introduction
 
 * [Background & Overview](README.md)
 
-## AgentPay Architecture
+# AgentPay Architecture
 
 * [System Overview](agentpay-architecture/system-overview.md)
 * [On-Chain Contracts](agentpay-architecture/on-chain-contracts/README.md)
@@ -17,7 +17,7 @@
   * [End-to-End Protocols](agentpay-architecture/off-chain-protocols/end-to-end-protocols.md)
 * [App Contracts and Protocols](agentpay-architecture/app-contracts-and-protocols.md)
 
-## State Guardian Network
+# State Guardian Network
 
 * [Off-Chain Availability Problem](state-guardian-network/off-chain-availability-problem.md)
 * [Evolution of SGN](state-guardian-network/evolution-of-sgn.md)
