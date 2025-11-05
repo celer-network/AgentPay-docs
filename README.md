@@ -24,7 +24,7 @@ By combining sub-second latency, scalability, and privacy, AgentPay forms a high
 
 ### **Use Cases**
 
-AgentPay powers **real-time, programmable payments** across a wide range of AI-driven interactions. Below are representative scenarios illustrating how autonomous agents and human users transact seamlessly through its decentralized off-chain payment network:
+AgentPay powers **real-time, programmable payments** across a wide range of AI-driven interactions. Below are representative scenarios illustrating how autonomous agents and human users transact seamlessly through its decentralized off-chain payment network
 
 1. **Real-Time Inference and API Marketplaces**\
    Model providers can expose inference or analytics APIs through autonomous agents, allowing consumers to pay **per inference** or **per query** in real time. Payments occur privately off-chain, hiding demand and pricing data from competitors while providers receive instant, final settlement.
