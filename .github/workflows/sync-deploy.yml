@@ -1,0 +1,141 @@
+name: Sync Main to Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    
+    steps:
+    - name: Checkout main branch
+      uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 0
+        token: ${{ secrets.PAT_TOKEN || github.token }}
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install PyYAML
+
+    - name: Process markdown files
+      run: python .github/scripts/process_markdown.py
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Backup processed files
+      run: |
+        # Create backup of processed files before switching branches
+        # Copy all files and directories, including hidden ones like .gitbook
+        # But exclude .git and .github directories
+        mkdir -p /tmp/processed_src
+        find . -maxdepth 1 -not -name '.' -not -name '.git' -not -name '.github' -exec cp -r {} /tmp/processed_src/ \;
+        echo "Backed up processed files"
+
+    - name: Stash changes before branch switch
+      run: |
+        # Stash any changes made by the processing script to avoid branch switch conflicts
+        if ! git diff --quiet || ! git diff --cached --quiet; then
+          git stash push -m "Temporary stash of processed files for deploy sync"
+          echo "Stashed changes before branch switch"
+        else
+          echo "No changes to stash"
+        fi
+
+    - name: Switch to deploy branch
+      run: |
+        # Fetch the latest deploy branch
+        git fetch origin deploy || echo "Deploy branch doesn't exist yet, will be created"
+        
+        # Switch to deploy branch (preserve existing content)
+        if git show-ref --verify --quiet refs/remotes/origin/deploy; then
+          # Deploy branch exists remotely, check it out
+          git checkout deploy
+          echo "Switched to existing deploy branch"
+        else
+          # Deploy branch doesn't exist, create it as orphan
+          git checkout --orphan deploy
+          git rm -rf . 2>/dev/null || true
+          echo "Created new orphan deploy branch"
+        fi
+
+    - name: Sync processed files to deploy branch
+      run: |
+        # Only update the src folder, preserve everything else on deploy branch
+        # Remove existing src folder if it exists
+        if [ -d "src" ]; then
+          rm -rf src
+          echo "Removed existing src folder"
+        fi
+        
+        # Create new src directory and copy processed files
+        mkdir -p src
+        cp -r /tmp/processed_src/* src/ 2>/dev/null || true
+        
+        # Also copy hidden files like .gitbook to src
+        cp -r /tmp/processed_src/.* src/ 2>/dev/null || true
+        
+        echo "Updated src folder with processed files from main branch"
+        
+        # Show what files are being synced
+        echo "Files in src directory:"
+        ls -la src/ || echo "No src directory found"
+        
+        # Add and commit only src folder changes
+        git add src
+        
+        # Check if there are changes to commit
+        echo "Checking for changes to commit..."
+        git status --porcelain
+        
+        if ! git diff --staged --quiet; then
+          git commit -m "Sync src from main: $(git log main -1 --format='%h %s')"
+          
+          # Push changes  
+          git push origin deploy
+          
+          # Trigger repository dispatch event to start GitHub Pages deployment
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            -d '{"event_type":"deploy-pages"}'
+        else
+          echo "No changes to commit"
+        fi
+        
+        # Clean up backup
+        rm -rf /tmp/processed_src
+
+    - name: Revert changes on main branch
+      run: |
+        # Switch back to main branch
+        git checkout main
+        
+        # Drop the stash to revert changes (we don't need them anymore)
+        if git stash list | grep -q "Temporary stash of processed files for deploy sync"; then
+          git stash drop
+          echo "Dropped stash - changes reverted"
+        else
+          echo "No stash to drop"
+        fi
+        
+        # Ensure we're in clean state
+        git reset --hard HEAD
+        
+        echo "Reverted processing changes on main branch"
