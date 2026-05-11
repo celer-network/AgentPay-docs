@@ -97,6 +97,8 @@ message ConditionalPay {
     uint64 resolve_timeout = 7 [(soltype) = "uint"];
     // address of the pay resolver contract
     bytes pay_resolver = 8 [(soltype) = "address"];
+    // chain id of the intended target chain
+    uint64 chain_id = 9 [(soltype) = "uint"];
 }
 ```
 
