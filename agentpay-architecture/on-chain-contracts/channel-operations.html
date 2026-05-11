@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-19a56b08.js";
+            window.path_to_searchindex_js = "../../searchindex-a80cfcd0.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -188,7 +188,7 @@
 <hr>
 <h3 id="open-channel"><a class="header" href="#open-channel">Open Channel</a></h3>
 <p>The CelerLedger contract provides an <code>openChannel</code> API that enables participants to create and fund a payment channel in a single transaction. The API accepts a co-signed channel initializer message from both peers:</p>
-<pre><code class="language-protobuf">message PaymentChannelInitializer {
+<pre><code class="language-proto">message PaymentChannelInitializer {
     // token type and initial balance distribution between peers
     TokenDistribution init_distribution = 1;
     // expiration time for this initializer
@@ -197,6 +197,10 @@
     uint64 dispute_timeout = 3 [(soltype) = "uint"];
     // index of the peer receiving any native tokens (e.g., msg.value)
     uint64 msg_value_receiver = 4 [(soltype) = "uint"];
+    // chain id of the intended target chain
+    uint64 chain_id = 5 [(soltype) = "uint"];
+    // address of the intended target ledger
+    bytes ledger_address = 6 [(soltype) = "address"];
 }
 </code></pre>
 <p>Upon receiving a valid initializer, the CelerLedger executes the following steps atomically:</p>
