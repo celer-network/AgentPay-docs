@@ -48,3 +48,16 @@
 .on-this-page li.header-item ol.section {
     display: none;
 }
+
+/* Normalize indent across siblings on the same heading level.
+   mdBook 0.5 toc.js has a bug: when an h3 follows an h4 (e.g. Withdraw -> h4
+   children -> Resolve Payment), the pop loop pops the level-3 entry too,
+   so subsequent h3 siblings get appended to the level-2 skeleton instead of
+   the level-3 ol — leaving the two groups of h3 siblings nested at different
+   depths. Each .section adds 20px padding-inline-start, so the visible result
+   is staggered indent for what should be sibling entries. Zero the extra
+   padding on nested .sections; the outermost still gets padding-left: 0 from
+   .on-this-page > ol above. */
+.on-this-page ol.section ol.section {
+    padding-inline-start: 0;
+}
