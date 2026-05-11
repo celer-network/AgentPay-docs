@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-a80cfcd0.js";
+            window.path_to_searchindex_js = "../../searchindex-439fc48d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -185,8 +185,8 @@
 </ul>
 <p>In this architecture:</p>
 <ul>
-<li><strong>CelerLedger</strong> and <strong>PayResolver</strong> are <em>versioned modules</em>, representing the system’s programmable logic layer that may evolve over time.</li>
-<li><strong>CelerWallet</strong>, <strong>PayRegistry</strong>, and <strong>VirtContractResolver</strong> are <em>permanent modules</em> that store assets and critical data. These remain stable, with minimal logic and no upgrade surface.</li>
+<li><strong>AgentPayLedger</strong> and <strong>PayResolver</strong> are <em>versioned modules</em>, representing the system’s programmable logic layer that may evolve over time.</li>
+<li><strong>AgentPayWallet</strong>, <strong>PayRegistry</strong>, and <strong>VirtContractResolver</strong> are <em>permanent modules</em> that store assets and critical data. These remain stable, with minimal logic and no upgrade surface.</li>
 </ul>
 <p>Together, this structure preserves the immutability and auditability of asset-holding contracts, while allowing rapid iteration and feature evolution in the channel and payment logic.</p>
 <hr>
@@ -200,10 +200,10 @@
 </ol>
 <p>This decentralized process avoids downtime and centralized control: each node freely chooses which resolver versions to trust and adopt. If a source uses a new resolver that a relay does not yet accept, the payment will simply be rerouted or rejected—preserving both autonomy and safety across the network.</p>
 <hr>
-<h3 id="versioning-celerledger"><a class="header" href="#versioning-celerledger">Versioning CelerLedger</a></h3>
-<p>As introduced in Contracts Architecture, <strong>CelerLedger</strong> manages payment channel logic, while <strong>CelerWallet</strong> securely holds assets. Each wallet has multiple owners (the channel peers) and a single operator — its associated ledger contract. Different channel pairs may choose different CelerLedger versions, all interacting with the same CelerWallet contract.</p>
-<p>AgentPay allows <strong>channel peers to cooperatively migrate</strong> their CelerLedger to a new version while continuing to use the same wallet, with <em>zero off-chain downtime</em>.</p>
-<h4 id="celerledger-migration-process"><a class="header" href="#celerledger-migration-process"><strong>CelerLedger migration process</strong></a></h4>
+<h3 id="versioning-agentpayledger"><a class="header" href="#versioning-agentpayledger">Versioning AgentPayLedger</a></h3>
+<p>As introduced in Contracts Architecture, <strong>AgentPayLedger</strong> manages payment channel logic, while <strong>AgentPayWallet</strong> securely holds assets. Each wallet has multiple owners (the channel peers) and a single operator — its associated ledger contract. Different channel pairs may choose different AgentPayLedger versions, all interacting with the same AgentPayWallet contract.</p>
+<p>AgentPay allows <strong>channel peers to cooperatively migrate</strong> their AgentPayLedger to a new version while continuing to use the same wallet, with <em>zero off-chain downtime</em>.</p>
+<h4 id="agentpayledger-migration-process"><a class="header" href="#agentpayledger-migration-process"><strong>AgentPayLedger migration process</strong></a></h4>
 <p>Migration requires mutual consent from both channel peers via a co-signed migration message:</p>
 <pre><code class="language-protobuf">message ChannelMigrationInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -212,7 +212,7 @@
     uint64 migration_deadline = 4 [(soltype) = "uint"];
 }
 </code></pre>
-<p>Anyone can complete the migration by submitting this message to the <strong>new</strong> CelerLedger’s <code>migrateChannelFrom</code> API.</p>
+<p>Anyone can complete the migration by submitting this message to the <strong>new</strong> AgentPayLedger’s <code>migrateChannelFrom</code> API.</p>
 <p><img src="../../.gitbook/assets/upgrade-ledger.png" alt=""><figcaption></figcaption></p>
 <p>As illustrated above, the migration consists of four inter-contract calls within one transaction:</p>
 <ol>
@@ -223,14 +223,14 @@
 </ol>
 <p>A migration request has higher priority than <code>intendSettle</code>, meaning peers can migrate even if the channel is in a <code>Settling</code> state. Upon migration, the channel becomes <code>Operable</code> again. This enables <strong>immediate off-chain upgrades with deferred on-chain finalization</strong>: once a migration is co-signed, peers can begin operating under the new logic off-chain before the transaction is executed.</p>
 <h4 id="zero-downtime-upgrade-flow"><a class="header" href="#zero-downtime-upgrade-flow"><strong>Zero-downtime upgrade flow</strong></a></h4>
-<p>Channel peers do not need to pause off-chain operations when migrating to a new CelerLedger version. The new logic becomes effective <em>as soon as the migration request is co-signed</em>, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.</p>
+<p>Channel peers do not need to pause off-chain operations when migrating to a new AgentPayLedger version. The new logic becomes effective <em>as soon as the migration request is co-signed</em>, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.</p>
 <p>If the <code>SimplexPaymentChannel</code> message format remains unchanged, peers only need to co-sign the migration request and can continue exchanging off-chain payments seamlessly.</p>
 <p>If the proto definition changes, peers must first co-sign equivalent states using the new format (representing the same balances as the old states), then co-sign the migration request and continue under the new logic.</p>
 <h4 id="manual-fallback-upgrade"><a class="header" href="#manual-fallback-upgrade"><strong>Manual fallback upgrade</strong></a></h4>
-<p>In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through <code>CelerWallet.proposeNewOperator</code>. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.</p>
+<p>In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through <code>AgentPayWallet.proposeNewOperator</code>. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.</p>
 <hr>
 <h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
-<p>AgentPay’s decentralized versioning framework achieves the rare balance between <strong>immutability and evolvability</strong>. Critical asset-holding contracts like CelerWallet and PayRegistry remain permanently secure and stable, while logic modules such as CelerLedger and PayResolver can evolve through cooperative peer-driven migration. This design eliminates centralized upgrade control, avoids the centralization and fragility of proxy-based patterns, and enables the network to upgrade safely, flexibly, and without interrupting off-chain operations.</p>
+<p>AgentPay’s decentralized versioning framework achieves the rare balance between <strong>immutability and evolvability</strong>. Critical asset-holding contracts like AgentPayWallet and PayRegistry remain permanently secure and stable, while logic modules such as AgentPayLedger and PayResolver can evolve through cooperative peer-driven migration. This design eliminates centralized upgrade control, avoids the centralization and fragility of proxy-based patterns, and enables the network to upgrade safely, flexibly, and without interrupting off-chain operations.</p>
 <p>The next section, <a href="../off-chain-protocols/">Off-chain Protocol</a>, builds on these on-chain primitives to describe how agents exchange and synchronize channel states, route payments across the network, and ensure instant off-chain finality with on-chain enforceability.</p>
 
                     </main>

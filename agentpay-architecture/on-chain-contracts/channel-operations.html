@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-a80cfcd0.js";
+            window.path_to_searchindex_js = "../../searchindex-439fc48d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -177,17 +177,17 @@
                     <main>
                         <h1 id="channel-operations"><a class="header" href="#channel-operations">Channel Operations</a></h1>
 <p>This section explains the key <strong>on-chain operations</strong> in AgentPay, including opening channels, depositing and withdrawing funds, resolving payments, and closing channels. Although most payments occur off-chain for efficiency, the system is optimized to handle the occasional on-chain interactions with <strong>minimal cost and latency</strong>.</p>
-<p>The <strong>CelerLedger</strong> contract manages each channel’s on-chain lifecycle and acts as the main entry point for user operations. Every payment channel transitions through the following five states:</p>
+<p>The <strong>AgentPayLedger</strong> contract manages each channel’s on-chain lifecycle and acts as the main entry point for user operations. Every payment channel transitions through the following five states:</p>
 <ul>
-<li><code>Uninitialized</code> — the channel has not yet been created in the current CelerLedger.</li>
+<li><code>Uninitialized</code> — the channel has not yet been created in the current AgentPayLedger.</li>
 <li><code>Operable</code> — the channel is active and available for regular use.</li>
 <li><code>Settling</code> — the channel is undergoing unilateral settlement.</li>
 <li><code>Closed</code> — the channel has been finalized and closed.</li>
-<li><code>Migrated</code> — the channel has been moved to another CelerLedger version.</li>
+<li><code>Migrated</code> — the channel has been moved to another AgentPayLedger version.</li>
 </ul>
 <hr>
 <h3 id="open-channel"><a class="header" href="#open-channel">Open Channel</a></h3>
-<p>The CelerLedger contract provides an <code>openChannel</code> API that enables participants to create and fund a payment channel in a single transaction. The API accepts a co-signed channel initializer message from both peers:</p>
+<p>The AgentPayLedger contract provides an <code>openChannel</code> API that enables participants to create and fund a payment channel in a single transaction. The API accepts a co-signed channel initializer message from both peers:</p>
 <pre><code class="language-protobuf">message PaymentChannelInitializer {
     // token type and initial balance distribution between peers
     TokenDistribution init_distribution = 1;
@@ -203,21 +203,21 @@
     bytes ledger_address = 6 [(soltype) = "address"];
 }
 </code></pre>
-<p>Upon receiving a valid initializer, the CelerLedger executes the following steps atomically:</p>
+<p>Upon receiving a valid initializer, the AgentPayLedger executes the following steps atomically:</p>
 <ol>
-<li>Creates a wallet in CelerWallet, using the returned wallet address to derive the unique <code>channel_id = Hash(walletAddress, ledgerAddress, Hash(channelInitializer))</code>.</li>
+<li>Creates a wallet in AgentPayWallet, using the returned wallet address to derive the unique <code>channel_id = Hash(walletAddress, ledgerAddress, Hash(channelInitializer))</code>.</li>
 <li>Initializes the channel entry in on-chain storage with the provided parameters.</li>
-<li>Transfers the specified token amounts—either ERC-20 or native tokens—from the peers to the CelerWallet according to the agreed initial distribution.</li>
+<li>Transfers the specified token amounts—either ERC-20 or native tokens—from the peers to the AgentPayWallet according to the agreed initial distribution.</li>
 </ol>
 <p>This single-step process allows peers to open a fully funded, operational channel without multiple setup transactions.</p>
 <hr>
 <h3 id="deposit"><a class="header" href="#deposit">Deposit</a></h3>
-<p>Anyone — not just the channel peers — can deposit funds into an existing payment channel by calling the <code>deposit</code> API of CelerLedger. The function takes three arguments: the <strong>channel ID</strong>, the <strong>receiver address</strong>, and the <strong>deposit amount</strong>.</p>
-<p>The CelerLedger contract verifies that the token type matches the channel configuration, then transfers the tokens from the sender to the channel’s wallet managed by CelerWallet.</p>
-<p>While all tokens ultimately reside in the CelerWallet contract, ERC-20 token deposits still require a prior <code>approve</code> call granting CelerLedger permission to transfer the tokens on behalf of the depositor.</p>
+<p>Anyone — not just the channel peers — can deposit funds into an existing payment channel by calling the <code>deposit</code> API of AgentPayLedger. The function takes three arguments: the <strong>channel ID</strong>, the <strong>receiver address</strong>, and the <strong>deposit amount</strong>.</p>
+<p>The AgentPayLedger contract verifies that the token type matches the channel configuration, then transfers the tokens from the sender to the channel’s wallet managed by AgentPayWallet.</p>
+<p>While all tokens ultimately reside in the AgentPayWallet contract, ERC-20 token deposits still require a prior <code>approve</code> call granting AgentPayLedger permission to transfer the tokens on behalf of the depositor.</p>
 <hr>
 <h3 id="withdraw"><a class="header" href="#withdraw">Withdraw</a></h3>
-<p>Peers can withdraw funds from a channel at any time. <strong>CelerLedger</strong> supports two withdrawal modes:</p>
+<p>Peers can withdraw funds from a channel at any time. <strong>AgentPayLedger</strong> supports two withdrawal modes:</p>
 <ul>
 <li><strong>Cooperative withdrawal</strong> — completed instantly in a single transaction when both peers agree.</li>
 <li><strong>Unilateral withdrawal</strong> — used when a peer is unavailable, requiring two transactions and a challenge period.</li>
@@ -232,7 +232,7 @@
     bytes recipient_channel_id = 5 [(soltype) = "bytes32"]; // optional
 }
 </code></pre>
-<p>Upon verification, <strong>CelerLedger</strong> transfers tokens from the channel’s <strong>CelerWallet</strong> either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.</p>
+<p>Upon verification, <strong>AgentPayLedger</strong> transfers tokens from the channel’s <strong>AgentPayWallet</strong> either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.</p>
 <h4 id="unilateral-withdraw"><a class="header" href="#unilateral-withdraw"><strong>Unilateral withdraw</strong></a></h4>
 <p>If a peer cannot reach its counterparty for co-signing, it can initiate a unilateral withdrawal using <code>intendWithdraw(channel_id, amount, recipient_channel_id)</code>. This starts a <strong>challenge window</strong>, during which the counterparty may call <code>vetoWithdraw</code> to dispute the request. Once the window closes without objection, the withdrawer finalizes the operation by calling <code>confirmWithdraw</code>.</p>
 <p>This two-step mechanism guarantees both liveness and fairness when one peer is temporarily offline.</p>
@@ -275,7 +275,7 @@ message CondPayResult {
 <h3 id="settle--close-channel"><a class="header" href="#settle--close-channel">Settle / Close Channel</a></h3>
 <p>A node can choose to <strong>settle or close a channel</strong> with its peer either <strong>cooperatively</strong> or <strong>unilaterally</strong>, similar to the withdrawal operation. Cooperative settling is preferred since it completes in a single transaction, while unilateral settling is used only when peers cannot agree or one party becomes unresponsive.</p>
 <h4 id="cooperative-settle"><a class="header" href="#cooperative-settle"><strong>Cooperative Settle</strong></a></h4>
-<p>The <code>cooperativeSettle</code> API in <strong>CelerLedger</strong> allows peers to close a channel instantly with a co-signed request containing the final balance distribution.</p>
+<p>The <code>cooperativeSettle</code> API in <strong>AgentPayLedger</strong> allows peers to close a channel instantly with a co-signed request containing the final balance distribution.</p>
 <pre><code class="language-protobuf">message CooperativeSettleInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
     // a sequence number greater than both simplex channels' sequence numbers
@@ -286,9 +286,9 @@ message CondPayResult {
     uint64 settle_deadline = 4 [(soltype) = "uint"];
 }
 </code></pre>
-<p>Upon receiving a valid co-signed request, <strong>CelerLedger</strong> closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.</p>
+<p>Upon receiving a valid co-signed request, <strong>AgentPayLedger</strong> closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.</p>
 <h4 id="unilateral-settle"><a class="header" href="#unilateral-settle"><strong>Unilateral Settle</strong></a></h4>
-<p>If cooperation is not possible, a peer can initiate a unilateral settle by calling <code>intendSettle</code>, providing the latest co-signed off-chain simplex states as input. <strong>CelerLedger</strong> computes the final balance distribution using these states and the outcomes of pending payments retrieved from the <strong>PayRegistry</strong>.</p>
+<p>If cooperation is not possible, a peer can initiate a unilateral settle by calling <code>intendSettle</code>, providing the latest co-signed off-chain simplex states as input. <strong>AgentPayLedger</strong> computes the final balance distribution using these states and the outcomes of pending payments retrieved from the <strong>PayRegistry</strong>.</p>
 <p>A <strong>challenge window</strong> is then opened, allowing the counterparty to submit newer simplex states with higher sequence numbers if available. Once the window closes, the initiating peer can finalize the process by calling <code>confirmSettle</code>, which closes the channel and releases the final balances accordingly.</p>
 
                     </main>

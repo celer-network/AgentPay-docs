@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-a80cfcd0.js";
+            window.path_to_searchindex_js = "../../searchindex-439fc48d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -179,22 +179,22 @@
 <p><img src="../../.gitbook/assets/agent-pay-contracts.png" alt=""><figcaption></figcaption></p>
 <p>The figure above illustrates the AgentPay on-chain contract architecture. The white dashed boxes at the bottom represent user-side off-chain components. Each colored rectangle denotes an individual on-chain contract: blue modules are <strong>AgentPay core contracts</strong> (those with dashed borders are <em>versioned contracts</em> that can evolve over time through peer-agreed migration), while green modules represent <strong>external condition contracts</strong> defined by applications. Orange arrows indicate inter-contract function calls with their primary purpose, and black arrows show user interactions from Agent nodes.</p>
 <p>The modular design separates critical asset custody from evolving business logic, enabling safer upgrades and clearer responsibilities. This section provides a high-level overview of all AgentPay contracts and their relationships. The detailed channel operations and workflows are described later in the <a href="channel-operations.html">Channel Operations</a> section.</p>
-<h3 id="celerwallet"><a class="header" href="#celerwallet">CelerWallet</a></h3>
-<p>The CelerWallet contract maintains multi-owner, multi-token wallets for all AgentPay channels. It serves purely as a <strong>secure asset custodian</strong>, holding users’ tokens without embedding any payment or business logic — those responsibilities reside in the <strong>CelerLedger</strong> contract.</p>
+<h3 id="agentpaywallet"><a class="header" href="#agentpaywallet">AgentPayWallet</a></h3>
+<p>The AgentPayWallet contract maintains multi-owner, multi-token wallets for all AgentPay channels. It serves purely as a <strong>secure asset custodian</strong>, holding users’ tokens without embedding any payment or business logic — those responsibilities reside in the <strong>AgentPayLedger</strong> contract.</p>
 <p>Each wallet defines two distinct roles:</p>
 <ul>
 <li><strong>Owners</strong> — the channel peers who jointly own the wallet and receive withdrawn funds.</li>
-<li><strong>Operator</strong> — a single contract (typically a CelerLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.</li>
+<li><strong>Operator</strong> — a single contract (typically a AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.</li>
 </ul>
-<p>CelerWallet exposes only the minimal, highly-audited functions needed to create wallets, deposit and withdraw tokens, and transfer operatorship. This simplicity makes it extremely robust and safe. A single CelerWallet contract is shared across the entire network. Channel peers never interact with it directly; instead, they access their funds through its operator — the CelerLedger contract described next.</p>
-<h3 id="celerledger"><a class="header" href="#celerledger">CelerLedger</a></h3>
-<p>The CelerLedger contract is the core of all AgentPay on-chain logic and the <strong>primary entry point</strong> for most <a href="channel-operations.html">on-chain user operations</a>. It defines the AgentPay channel state machine, maintains the core payment channel logic, acts as the operator of <strong>CelerWallet</strong> to manage token assets, and exposes a comprehensive set of APIs for peers to open, update, and settle channels.</p>
-<p>During execution, CelerLedger interacts with other contracts to coordinate channel operations:</p>
+<p>AgentPayWallet exposes only the minimal, highly-audited functions needed to create wallets, deposit and withdraw tokens, and transfer operatorship. This simplicity makes it extremely robust and safe. A single AgentPayWallet contract is shared across the entire network. Channel peers never interact with it directly; instead, they access their funds through its operator — the AgentPayLedger contract described next.</p>
+<h3 id="agentpayledger"><a class="header" href="#agentpayledger">AgentPayLedger</a></h3>
+<p>The AgentPayLedger contract is the core of all AgentPay on-chain logic and the <strong>primary entry point</strong> for most <a href="channel-operations.html">on-chain user operations</a>. It defines the AgentPay channel state machine, maintains the core payment channel logic, acts as the operator of <strong>AgentPayWallet</strong> to manage token assets, and exposes a comprehensive set of APIs for peers to open, update, and settle channels.</p>
+<p>During execution, AgentPayLedger interacts with other contracts to coordinate channel operations:</p>
 <ul>
-<li><strong>CelerWallet</strong> — handles deposits, withdrawals, and operatorship transfers.</li>
+<li><strong>AgentPayWallet</strong> — handles deposits, withdrawals, and operatorship transfers.</li>
 <li><strong>PayRegistry</strong> — retrieves resolved payment results when finalizing settlements.</li>
 </ul>
-<p>CelerLedger is implemented as a <a href="decentralized-versioning.html">versioned contract</a>, allowing peers to migrate to newer ledger versions by mutual agreement. Unlike the single global CelerWallet, multiple ledger versions can coexist — each channel pair freely selects and migrates to the version they trust, ensuring flexibility and continuous operation without network downtime.</p>
+<p>AgentPayLedger is implemented as a <a href="decentralized-versioning.html">versioned contract</a>, allowing peers to migrate to newer ledger versions by mutual agreement. Unlike the single global AgentPayWallet, multiple ledger versions can coexist — each channel pair freely selects and migrates to the version they trust, ensuring flexibility and continuous operation without network downtime.</p>
 <h3 id="payresolver"><a class="header" href="#payresolver">PayResolver</a></h3>
 <p>The PayResolver contract defines the <strong>on-chain logic for resolving conditional payments</strong>. It provides simple APIs that allow an agent to finalize a payment on-chain when cooperative off-chain resolution is not possible.</p>
 <p>When executed, PayResolver interacts with several other contracts to complete the resolution process:</p>
