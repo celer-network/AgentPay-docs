@@ -38,3 +38,13 @@
 .chapter li:not(.part-title) {
     margin-left: 0.5em;
 }
+
+/* Hide in-page heading entries nested under another heading from the sidebar.
+   mdBook 0.5+ toc.js injects h2-h6 from the current page into <ol class="section">
+   wrappers. Hide any such wrapper that sits inside a header-item <li> — that
+   matches "h3 under h2", "h4 under h3", etc. while leaving the top tier
+   visible. Skeleton wrappers for skipped levels are NOT inside a header-item,
+   so h3-only pages still surface their h3s. */
+.on-this-page li.header-item ol.section {
+    display: none;
+}
