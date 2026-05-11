@@ -16,7 +16,7 @@ The **CelerLedger** contract manages each channel’s on-chain lifecycle and act
 
 The CelerLedger contract provides an `openChannel` API that enables participants to create and fund a payment channel in a single transaction. The API accepts a co-signed channel initializer message from both peers:
 
-```proto
+```protobuf
 message PaymentChannelInitializer {
     // token type and initial balance distribution between peers
     TokenDistribution init_distribution = 1;
