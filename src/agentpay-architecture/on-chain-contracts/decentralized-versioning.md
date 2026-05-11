@@ -11,8 +11,8 @@ This design achieves two goals:
 
 In this architecture:
 
-* **CelerLedger** and **PayResolver** are _versioned modules_, representing the system’s programmable logic layer that may evolve over time.
-* **CelerWallet**, **PayRegistry**, and **VirtContractResolver** are _permanent modules_ that store assets and critical data. These remain stable, with minimal logic and no upgrade surface.
+* **AgentPayLedger** and **PayResolver** are _versioned modules_, representing the system’s programmable logic layer that may evolve over time.
+* **AgentPayWallet**, **PayRegistry**, and **VirtContractResolver** are _permanent modules_ that store assets and critical data. These remain stable, with minimal logic and no upgrade surface.
 
 Together, this structure preserves the immutability and auditability of asset-holding contracts, while allowing rapid iteration and feature evolution in the channel and payment logic.
 
@@ -33,13 +33,13 @@ This decentralized process avoids downtime and centralized control: each node fr
 
 ***
 
-### Versioning CelerLedger
+### Versioning AgentPayLedger
 
-As introduced in Contracts Architecture, **CelerLedger** manages payment channel logic, while **CelerWallet** securely holds assets. Each wallet has multiple owners (the channel peers) and a single operator — its associated ledger contract. Different channel pairs may choose different CelerLedger versions, all interacting with the same CelerWallet contract.
+As introduced in Contracts Architecture, **AgentPayLedger** manages payment channel logic, while **AgentPayWallet** securely holds assets. Each wallet has multiple owners (the channel peers) and a single operator — its associated ledger contract. Different channel pairs may choose different AgentPayLedger versions, all interacting with the same AgentPayWallet contract.
 
-AgentPay allows **channel peers to cooperatively migrate** their CelerLedger to a new version while continuing to use the same wallet, with _zero off-chain downtime_.
+AgentPay allows **channel peers to cooperatively migrate** their AgentPayLedger to a new version while continuing to use the same wallet, with _zero off-chain downtime_.
 
-#### **CelerLedger migration process**
+#### **AgentPayLedger migration process**
 
 Migration requires mutual consent from both channel peers via a co-signed migration message:
 
@@ -52,7 +52,7 @@ message ChannelMigrationInfo {
 }
 ```
 
-Anyone can complete the migration by submitting this message to the **new** CelerLedger’s `migrateChannelFrom` API.
+Anyone can complete the migration by submitting this message to the **new** AgentPayLedger’s `migrateChannelFrom` API.
 
 <img src="../../.gitbook/assets/upgrade-ledger.png" alt=""><figcaption></figcaption>
 
@@ -67,7 +67,7 @@ A migration request has higher priority than `intendSettle`, meaning peers can m
 
 #### **Zero-downtime upgrade flow**
 
-Channel peers do not need to pause off-chain operations when migrating to a new CelerLedger version. The new logic becomes effective _as soon as the migration request is co-signed_, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.
+Channel peers do not need to pause off-chain operations when migrating to a new AgentPayLedger version. The new logic becomes effective _as soon as the migration request is co-signed_, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.
 
 If the `SimplexPaymentChannel` message format remains unchanged, peers only need to co-sign the migration request and can continue exchanging off-chain payments seamlessly.
 
@@ -75,12 +75,12 @@ If the proto definition changes, peers must first co-sign equivalent states usin
 
 #### **Manual fallback upgrade**
 
-In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through `CelerWallet.proposeNewOperator`. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.
+In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through `AgentPayWallet.proposeNewOperator`. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.
 
 ***
 
 ### Summary
 
-AgentPay’s decentralized versioning framework achieves the rare balance between **immutability and evolvability**. Critical asset-holding contracts like CelerWallet and PayRegistry remain permanently secure and stable, while logic modules such as CelerLedger and PayResolver can evolve through cooperative peer-driven migration. This design eliminates centralized upgrade control, avoids the centralization and fragility of proxy-based patterns, and enables the network to upgrade safely, flexibly, and without interrupting off-chain operations.
+AgentPay’s decentralized versioning framework achieves the rare balance between **immutability and evolvability**. Critical asset-holding contracts like AgentPayWallet and PayRegistry remain permanently secure and stable, while logic modules such as AgentPayLedger and PayResolver can evolve through cooperative peer-driven migration. This design eliminates centralized upgrade control, avoids the centralization and fragility of proxy-based patterns, and enables the network to upgrade safely, flexibly, and without interrupting off-chain operations.
 
 The next section, [Off-chain Protocol](../off-chain-protocols/), builds on these on-chain primitives to describe how agents exchange and synchronize channel states, route payments across the network, and ensure instant off-chain finality with on-chain enforceability.
