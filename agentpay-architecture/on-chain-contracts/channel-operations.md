@@ -2,19 +2,19 @@
 
 This section explains the key **on-chain operations** in AgentPay, including opening channels, depositing and withdrawing funds, resolving payments, and closing channels. Although most payments occur off-chain for efficiency, the system is optimized to handle the occasional on-chain interactions with **minimal cost and latency**.
 
-The **CelerLedger** contract manages each channel’s on-chain lifecycle and acts as the main entry point for user operations. Every payment channel transitions through the following five states:
+The **AgentPayLedger** contract manages each channel’s on-chain lifecycle and acts as the main entry point for user operations. Every payment channel transitions through the following five states:
 
-* `Uninitialized` — the channel has not yet been created in the current CelerLedger.
+* `Uninitialized` — the channel has not yet been created in the current AgentPayLedger.
 * `Operable` — the channel is active and available for regular use.
 * `Settling` — the channel is undergoing unilateral settlement.
 * `Closed` — the channel has been finalized and closed.
-* `Migrated` — the channel has been moved to another CelerLedger version.
+* `Migrated` — the channel has been moved to another AgentPayLedger version.
 
 ***
 
 ### Open Channel
 
-The CelerLedger contract provides an `openChannel` API that enables participants to create and fund a payment channel in a single transaction. The API accepts a co-signed channel initializer message from both peers:
+The AgentPayLedger contract provides an `openChannel` API that enables participants to create and fund a payment channel in a single transaction. The API accepts a co-signed channel initializer message from both peers:
 
 ```protobuf
 message PaymentChannelInitializer {
@@ -33,11 +33,11 @@ message PaymentChannelInitializer {
 }
 ```
 
-Upon receiving a valid initializer, the CelerLedger executes the following steps atomically:
+Upon receiving a valid initializer, the AgentPayLedger executes the following steps atomically:
 
-1. Creates a wallet in CelerWallet, using the returned wallet address to derive the unique `channel_id = Hash(walletAddress, ledgerAddress, Hash(channelInitializer))`.
+1. Creates a wallet in AgentPayWallet, using the returned wallet address to derive the unique `channel_id = Hash(walletAddress, ledgerAddress, Hash(channelInitializer))`.
 2. Initializes the channel entry in on-chain storage with the provided parameters.
-3. Transfers the specified token amounts—either ERC-20 or native tokens—from the peers to the CelerWallet according to the agreed initial distribution.
+3. Transfers the specified token amounts—either ERC-20 or native tokens—from the peers to the AgentPayWallet according to the agreed initial distribution.
 
 This single-step process allows peers to open a fully funded, operational channel without multiple setup transactions.
 
@@ -45,17 +45,17 @@ This single-step process allows peers to open a fully funded, operational channe
 
 ### Deposit
 
-Anyone — not just the channel peers — can deposit funds into an existing payment channel by calling the `deposit` API of CelerLedger. The function takes three arguments: the **channel ID**, the **receiver address**, and the **deposit amount**.
+Anyone — not just the channel peers — can deposit funds into an existing payment channel by calling the `deposit` API of AgentPayLedger. The function takes three arguments: the **channel ID**, the **receiver address**, and the **deposit amount**.
 
-The CelerLedger contract verifies that the token type matches the channel configuration, then transfers the tokens from the sender to the channel’s wallet managed by CelerWallet.
+The AgentPayLedger contract verifies that the token type matches the channel configuration, then transfers the tokens from the sender to the channel’s wallet managed by AgentPayWallet.
 
-While all tokens ultimately reside in the CelerWallet contract, ERC-20 token deposits still require a prior `approve` call granting CelerLedger permission to transfer the tokens on behalf of the depositor.
+While all tokens ultimately reside in the AgentPayWallet contract, ERC-20 token deposits still require a prior `approve` call granting AgentPayLedger permission to transfer the tokens on behalf of the depositor.
 
 ***
 
 ### Withdraw
 
-Peers can withdraw funds from a channel at any time. **CelerLedger** supports two withdrawal modes:
+Peers can withdraw funds from a channel at any time. **AgentPayLedger** supports two withdrawal modes:
 
 * **Cooperative withdrawal** — completed instantly in a single transaction when both peers agree.
 * **Unilateral withdrawal** — used when a peer is unavailable, requiring two transactions and a challenge period.
@@ -74,7 +74,7 @@ message CooperativeWithdrawInfo {
 }
 ```
 
-Upon verification, **CelerLedger** transfers tokens from the channel’s **CelerWallet** either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.
+Upon verification, **AgentPayLedger** transfers tokens from the channel’s **AgentPayWallet** either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.
 
 #### **Unilateral withdraw**
 
@@ -142,7 +142,7 @@ A node can choose to **settle or close a channel** with its peer either **cooper
 
 #### **Cooperative Settle**
 
-The `cooperativeSettle` API in **CelerLedger** allows peers to close a channel instantly with a co-signed request containing the final balance distribution.
+The `cooperativeSettle` API in **AgentPayLedger** allows peers to close a channel instantly with a co-signed request containing the final balance distribution.
 
 ```protobuf
 message CooperativeSettleInfo {
@@ -156,10 +156,10 @@ message CooperativeSettleInfo {
 }
 ```
 
-Upon receiving a valid co-signed request, **CelerLedger** closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.
+Upon receiving a valid co-signed request, **AgentPayLedger** closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.
 
 #### **Unilateral Settle**
 
-If cooperation is not possible, a peer can initiate a unilateral settle by calling `intendSettle`, providing the latest co-signed off-chain simplex states as input. **CelerLedger** computes the final balance distribution using these states and the outcomes of pending payments retrieved from the **PayRegistry**.
+If cooperation is not possible, a peer can initiate a unilateral settle by calling `intendSettle`, providing the latest co-signed off-chain simplex states as input. **AgentPayLedger** computes the final balance distribution using these states and the outcomes of pending payments retrieved from the **PayRegistry**.
 
 A **challenge window** is then opened, allowing the counterparty to submit newer simplex states with higher sequence numbers if available. Once the window closes, the initiating peer can finalize the process by calling `confirmSettle`, which closes the channel and releases the final balances accordingly.
