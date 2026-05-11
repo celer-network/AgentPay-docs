@@ -6,4 +6,5 @@ language = "en"
 [output.html]
 theme = "theme"
 additional-css = ["theme/custom.css"]
+additional-js = ["theme/highlight-protobuf.js"]
 site-url = "/"
