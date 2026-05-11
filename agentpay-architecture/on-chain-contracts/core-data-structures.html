@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-f6f585e0.js";
+            window.path_to_searchindex_js = "../../searchindex-19a56b08.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -247,6 +247,8 @@ message ConditionalPay {
     uint64 resolve_timeout = 7 [(soltype) = "uint"];
     // address of the pay resolver contract
     bytes pay_resolver = 8 [(soltype) = "address"];
+    // chain id of the intended target chain
+    uint64 chain_id = 9 [(soltype) = "uint"];
 }
 </code></pre>
 <p>All fields are defined by the payment source and remain <strong>immutable</strong> as the payment is relayed across multiple hops. Each payment is identified by a globally unique ID computed as:<br><code>payID = Hash(Hash(pay) + pay.pay_resolver)</code>. This ensures determinism and binding to a specific resolver contract (see <a href="contracts-architecture.html#payregistry">PayRegistry</a> for details).</p>
