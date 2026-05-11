@@ -50,13 +50,17 @@
     }
 
     function rehighlightProtobufBlocks() {
+        // mdBook 0.5.0-beta.1 ships hljs 10.1.1, which only exposes
+        // `highlightBlock`. Newer hljs (10.7+) added `highlightElement`;
+        // call whichever is available.
+        const highlight = (hljs.highlightElement || hljs.highlightBlock).bind(hljs);
         document.querySelectorAll('pre code.language-protobuf').forEach(function (block) {
             // mdBook's highlight pass already ran. Reset and re-tokenize so
             // the grammar we just registered actually applies.
             block.removeAttribute('data-highlighted');
             block.classList.remove('hljs');
             block.innerHTML = block.textContent;
-            hljs.highlightElement(block);
+            highlight(block);
         });
     }
 
