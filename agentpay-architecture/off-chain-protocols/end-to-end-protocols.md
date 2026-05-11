@@ -114,7 +114,7 @@ The setup process for an end-to-end multi-hop payment with numeric conditions is
 
 The figure below illustrates the cooperative settlement flow for payments with numeric conditions when all nodes behave honestly. The process begins at the payment destination (_D_) once the final payment result is determined to be a value between zero and the maximum amount.
 
-<figure><img src="../../.gitbook/assets/e2e-vouch (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../../.gitbook/assets/e2e-vouch.png" alt=""><figcaption></figcaption></figure>
 
 The destination _D_ first sends a `PayResultVouchRequest` to the payment source _A_, producing a co-signed [VouchedCondPayResult](../on-chain-contracts/channel-operations.md#resolve-payment-by-vouched-result) that confirms both parties agree on the payment outcome. Then, _D_ sends a `PaymentSettleProof` message to its upstream peer _C_, using the vouched result as proof. _C_ verifies that the payment is not finalized at a smaller amount by querying the PayRegistry, then pays _D_ the vouched amount off-chain. After receiving the settlement response, _C_ forwards the same vouched result upstream to _B_, which repeats the same process. Finally, _A_ settles with _B_ directly without querying the registry, since _A_ is itself the payment source that signed the vouched result.
 

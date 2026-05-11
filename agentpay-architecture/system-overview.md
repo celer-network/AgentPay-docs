@@ -8,7 +8,7 @@ The system architecture separates payment execution, application logic, and netw
 
 ### System Architecture&#x20;
 
-<figure><img src="../.gitbook/assets/Screenshot 2025-10-29 at 10.57.23 AM.png" alt=""><figcaption></figcaption></figure>
+<figure><img src="../.gitbook/assets/agent-pay-architecture.png" alt=""><figcaption></figcaption></figure>
 
 The figure above illustrates the high-level architecture of the AgentPay network. It consists of three main components: the **payment channel**, the **app channel**, and the **nodes connected by these channels**. Together they enable secure, low-latency economic interactions off-chain, with on-chain settlement only when necessary.
 
