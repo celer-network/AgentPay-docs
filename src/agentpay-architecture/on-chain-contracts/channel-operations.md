@@ -136,6 +136,18 @@ During the challenge period, a result can only be updated **to a higher amount**
 
 ***
 
+### Snapshot States
+
+Channel peers can record co-signed off-chain simplex states on-chain as a lightweight **state checkpoint**, without closing the channel or processing pending payments. This is useful before a planned offline period, or as periodic insurance against later disputes: once a state is recorded on-chain, no older state can be used to settle the channel unilaterally.
+
+The `snapshotStates` API of **AgentPayLedger** accepts a co-signed array of simplex states. The states may belong to **different channels** — `snapshotStates` natively supports multi-channel batch processing in a single transaction, reducing gas overhead for service nodes that maintain many channels at once.
+
+Upon receiving a valid request, **AgentPayLedger** verifies the co-signatures and updates the on-chain record of each simplex state's sequence number and transferred balance. The channel stays in the `Operable` state — no challenge window opens, pending payments are not processed, and normal off-chain operation continues.
+
+Snapshotting is a self-service alternative to delegating state protection to the [State Guardian Network](../../state-guardian-network/sgn-as-channel-guardian.md); the two approaches can also be combined.
+
+***
+
 ### Settle / Close Channel
 
 A node can choose to **settle or close a channel** with its peer either **cooperatively** or **unilaterally**, similar to the withdrawal operation. Cooperative settling is preferred since it completes in a single transaction, while unilateral settling is used only when peers cannot agree or one party becomes unresponsive.
