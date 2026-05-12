@@ -4,7 +4,7 @@ A single-hop conditional payment forms the fundamental building block of the Age
 
 As described earlier, AgentPay adopts a [full-duplex channel model](../on-chain-contracts/core-data-structures.md#duplex-payment-channel) to maximize off-chain throughput. If two peers instead shared a single state struct with one global sequence number, they would need to synchronize every update, introducing contention and latency.
 
-By contrast, a duplex channel splits the shared state into two **unidirectional simplex channels**, each with an independent sequence number. This allows both peers to send payments concurrently without coordination overhead. To prevent race conditions, only the `peer_from` (field 2 of the [simplex channe](../on-chain-contracts/core-data-structures.md#simplex-channel-state)l) is permitted to initiate state updates. Each off-chain update follows a simple two-step handshake:
+By contrast, a duplex channel splits the shared state into two **unidirectional simplex channels**, each with an independent sequence number. This allows both peers to send payments concurrently without coordination overhead. To prevent race conditions, only the `peer_from` (field 2 of the [simplex channel](../on-chain-contracts/core-data-structures.md#simplex-channel-state)) is permitted to initiate state updates. Each off-chain update follows a simple two-step handshake:
 
 1. The `peer_from` creates a new simplex state, signs it, and sends it to the counterparty.
 2. The counterparty verifies the update and returns the co-signed new off-chain state.

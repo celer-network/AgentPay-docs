@@ -44,7 +44,7 @@ If a hash lock condition is present, the source **A** must then reveal the preim
 
 Once the conditional payment is successfully set up, the nodes along the route cooperatively settle the payment hop by hop.
 
-The figure below shows the message flow when the payment source initiates settlement by paying the full amount to its peer. This can occur immediately after **A** receives the `RevealSecretAck` for a payment protected by a single hash lock, or after the associated CelerApp boolean conditions are finalized (off-chain) as _true_.
+The figure below shows the message flow when the payment source initiates settlement by paying the full amount to its peer. This can occur immediately after **A** receives the `RevealSecretAck` for a payment protected by a single hash lock, or after the associated App boolean conditions are finalized (off-chain) as _true_.
 
 <figure><img src="../../.gitbook/assets/e2e-pay-full.png" alt=""><figcaption></figcaption></figure>
 
