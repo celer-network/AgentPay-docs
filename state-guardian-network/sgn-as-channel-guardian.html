@@ -190,10 +190,10 @@
 </ol>
 <p>The guarded state can also be retrieved through the SGN’s off-chain <code>getChannelState</code> API whenever the Agent reconnects.</p>
 <p>SGN offers two service modes, giving Agents flexibility between <strong>speed</strong> and <strong>privacy</strong>.</p>
-<h3 id="fast-mode"><a class="header" href="#fast-mode"><strong>Fast Mode</strong></a></h3>
+<h3 id="fast-mode"><a class="header" href="#fast-mode">Fast Mode</a></h3>
 <p>In Fast Mode, the guard request includes the latest co-signed state proof. When a settlement attempt is detected, the assigned SGN guardian simply submits the <code>intendSettle</code> transaction with this guarded state proof. After the settlement process completes, the channel can be finalized by any participant via the standard <code>confirmSettle</code> transaction.</p>
 <p>This mode provides the lowest latency and simplest workflow, suitable for most use cases where privacy is not a primary concern. Although validators see sequence numbers and aggregate balance proofs, they cannot infer detailed payment routes or conditions. Off-chain transactions under Fast Mode already provide better privacy than on-chain transfers.</p>
-<h3 id="private-mode"><a class="header" href="#private-mode"><strong>Private Mode</strong></a></h3>
+<h3 id="private-mode"><a class="header" href="#private-mode">Private Mode</a></h3>
 <p>For users requiring stronger privacy guarantees, Private Mode limits what information is revealed to SGN. Instead of sending the full state proof, the Agent provides only the minimal tuple:</p>
 <pre><code>cps = &lt;channel_id, peer_from, seq_num, signatures&gt;
 </code></pre>
@@ -209,7 +209,7 @@
 <hr>
 <h2 id="guardian-assignment-and-incentives"><a class="header" href="#guardian-assignment-and-incentives"><strong>Guardian Assignment and Incentives</strong></a></h2>
 <p>SGN validators collectively serve as decentralized <em>channel guardians</em>, providing continuous on-chain monitoring and timely response services that protect AgentPay channels during dispute windows. Each validator independently tracks on-chain events and collectively reaches consensus within SGN when a guarded channel requires action.</p>
-<h3 id="assignment-model"><a class="header" href="#assignment-model"><strong>Assignment Model</strong></a></h3>
+<h3 id="assignment-model"><a class="header" href="#assignment-model">Assignment Model</a></h3>
 <p>For every guarded channel, SGN selects a subset of validators as <em>active guardians</em>, with the remainder serving as <em>standby guardians</em>. When a settlement attempt is detected on a guarded channel:</p>
 <ul>
 <li>Validators independently verify the event and may broadcast a valid guard transaction after a short randomized delay determined by their assignment order.</li>
@@ -217,7 +217,7 @@
 <li>All validators observe and agree on the event within SGN through the same event-sync and consensus mechanism already used for cross-chain message verification in cBridge and CelerIM.</li>
 </ul>
 <p>This model enables fast, decentralized, and reliable protection without redundant transactions or coordination overhead.</p>
-<h3 id="economic-incentives"><a class="header" href="#economic-incentives"><strong>Economic Incentives</strong></a></h3>
+<h3 id="economic-incentives"><a class="header" href="#economic-incentives">Economic Incentives</a></h3>
 <p>Each AgentPay channel can register a <strong>guard service fee</strong>, which may be structured as either a per-request fee or a recurring subscription fee.<br>This fee is divided into two parts:</p>
 <ol>
 <li><strong>Active Guard Reward:</strong> Granted to the validator that first submits a valid on-chain guard transaction when a dispute occurs.</li>
@@ -225,7 +225,7 @@
 </ol>
 <p>If no on-chain settlement is ever triggered—which is the expected case under normal cooperative operation—the validator network still receives the baseline staking reward from accumulated subscription fees, reflecting its ongoing availability and coverage commitment.</p>
 <p>This model ensures that validators are <strong>rewarded both for readiness and for action</strong>, sustaining long-term participation while keeping user costs predictable and minimal.</p>
-<h3 id="accountability-and-reputation"><a class="header" href="#accountability-and-reputation"><strong>Accountability and Reputation</strong></a></h3>
+<h3 id="accountability-and-reputation"><a class="header" href="#accountability-and-reputation">Accountability and Reputation</a></h3>
 <p>Each validator maintains a <strong>guardian reliability score</strong> based on measurable performance metrics, including uptime, event monitoring responsiveness, and historical success in submitting valid guard transactions.</p>
 <p>Validators with higher scores gain higher assignment priority for future guard requests and receive proportionally greater reward shares from the baseline staking distribution. Occasional missed events only affect reputation and future assignment weighting—without risking stake slashing—whereas deliberate protocol violations, such as falsifying SGN consensus or submitting invalid guard proofs, remain subject to on-chain penalties.</p>
 <p>This model ensures <strong>trust-any safety</strong> for users while preserving a <strong>validator-friendly and sustainable</strong> operating environment that rewards consistent service quality over time.</p>

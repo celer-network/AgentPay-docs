@@ -203,7 +203,7 @@
 <h3 id="versioning-agentpayledger"><a class="header" href="#versioning-agentpayledger">Versioning AgentPayLedger</a></h3>
 <p>As introduced in Contracts Architecture, <strong>AgentPayLedger</strong> manages payment channel logic, while <strong>AgentPayWallet</strong> securely holds assets. Each wallet has multiple owners (the channel peers) and a single operator — its associated ledger contract. Different channel pairs may choose different AgentPayLedger versions, all interacting with the same AgentPayWallet contract.</p>
 <p>AgentPay allows <strong>channel peers to cooperatively migrate</strong> their AgentPayLedger to a new version while continuing to use the same wallet, with <em>zero off-chain downtime</em>.</p>
-<h4 id="agentpayledger-migration-process"><a class="header" href="#agentpayledger-migration-process"><strong>AgentPayLedger migration process</strong></a></h4>
+<h4 id="agentpayledger-migration-process"><a class="header" href="#agentpayledger-migration-process">AgentPayLedger migration process</a></h4>
 <p>Migration requires mutual consent from both channel peers via a co-signed migration message:</p>
 <pre><code class="language-protobuf">message ChannelMigrationInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -222,11 +222,11 @@
 <li>The <strong>new ledger</strong> imports state data from the old ledger to initialize the channel entry.</li>
 </ol>
 <p>A migration request has higher priority than <code>intendSettle</code>, meaning peers can migrate even if the channel is in a <code>Settling</code> state. Upon migration, the channel becomes <code>Operable</code> again. This enables <strong>immediate off-chain upgrades with deferred on-chain finalization</strong>: once a migration is co-signed, peers can begin operating under the new logic off-chain before the transaction is executed.</p>
-<h4 id="zero-downtime-upgrade-flow"><a class="header" href="#zero-downtime-upgrade-flow"><strong>Zero-downtime upgrade flow</strong></a></h4>
+<h4 id="zero-downtime-upgrade-flow"><a class="header" href="#zero-downtime-upgrade-flow">Zero-downtime upgrade flow</a></h4>
 <p>Channel peers do not need to pause off-chain operations when migrating to a new AgentPayLedger version. The new logic becomes effective <em>as soon as the migration request is co-signed</em>, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.</p>
 <p>If the <code>SimplexPaymentChannel</code> message format remains unchanged, peers only need to co-sign the migration request and can continue exchanging off-chain payments seamlessly.</p>
 <p>If the proto definition changes, peers must first co-sign equivalent states using the new format (representing the same balances as the old states), then co-sign the migration request and continue under the new logic.</p>
-<h4 id="manual-fallback-upgrade"><a class="header" href="#manual-fallback-upgrade"><strong>Manual fallback upgrade</strong></a></h4>
+<h4 id="manual-fallback-upgrade"><a class="header" href="#manual-fallback-upgrade">Manual fallback upgrade</a></h4>
 <p>In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through <code>AgentPayWallet.proposeNewOperator</code>. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.</p>
 <hr>
 <h3 id="summary"><a class="header" href="#summary">Summary</a></h3>

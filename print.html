@@ -188,7 +188,7 @@
 <p>Its architecture supports <strong>generalized conditional payments</strong> based on verifiable computation, oracle outcomes, or ZK proofs—allowing seamless integration with diverse AI and data services. Through <strong>multi-hop routing</strong>, agents can exchange value across chains and ecosystems without requiring direct connections. The <strong>State Guardian Network (SGN)</strong> autonomously monitors off-chain states and resolves disputes on behalf of offline agents, providing continuous security guarantees.</p>
 <p>By combining sub-second latency, scalability, and privacy, AgentPay forms a high-performance payment backbone for <strong>fast, cost-efficient, and autonomous coordination among AI agents</strong>.</p>
 <hr>
-<h3 id="use-cases"><a class="header" href="#use-cases"><strong>Use Cases</strong></a></h3>
+<h3 id="use-cases"><a class="header" href="#use-cases">Use Cases</a></h3>
 <p>AgentPay powers <strong>real-time, programmable payments</strong> across a wide range of AI-driven interactions. Below are representative scenarios illustrating how autonomous agents and human users transact seamlessly through its decentralized off-chain payment network</p>
 <ol>
 <li><strong>Real-Time Inference and API Marketplaces</strong><br>Model providers can expose inference or analytics APIs through autonomous agents, allowing consumers to pay <strong>per inference</strong> or <strong>per query</strong> in real time. Payments occur privately off-chain, hiding demand and pricing data from competitors while providers receive instant, final settlement.</li>
@@ -198,7 +198,7 @@
 <li><strong>Human–AI Collaboration</strong><br>Human users engaging with AI assistants, content creators, or simulation agents can subscribe, tip, or stream payments in real time—enabling rich, continuous value exchange between people and intelligent systems.</li>
 </ol>
 <hr>
-<h3 id="summary"><a class="header" href="#summary"><strong>Summary</strong></a></h3>
+<h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
 <p>State channels provide the missing payment and privacy infrastructure for the emerging AI agent ecosystem—enabling real-time, granular, and confidential value exchange at Internet scale.</p>
 <p>Built on Celer’s proven technology, AgentPay offers the most mature, scalable, and composable foundation for AI-to-AI and human–AI interactions, delivering instant settlement and programmable coordination across chains and ecosystems.</p>
 <p>This architecture marks a natural evolution from static AI platforms to self-transacting, interoperable, and privacy-preserving AI economies, where intelligence and value flow freely, securely, and autonomously across the digital world.</p>
@@ -266,7 +266,7 @@ message SimplexPaymentChannel {
 </code></pre>
 <p>This protobuf representation is jointly used by both the off-chain protocol and the on-chain contracts across supported blockchains. A simplex state is <em>valid only if it is co-signed by both peers and has the highest sequence number</em>.</p>
 <p>Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer <em>A</em> is: <code>A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending</code> .</p>
-<h3 id="list-of-pending-pay-ids"><a class="header" href="#list-of-pending-pay-ids"><strong>List of pending pay IDs</strong></a></h3>
+<h3 id="list-of-pending-pay-ids"><a class="header" href="#list-of-pending-pay-ids">List of pending pay IDs</a></h3>
 <p>Details of the payment-related fields in the simplex state (such as conditional payments) will be discussed <a href="#conditional-payment">later</a>. Here, we focus on how pending conditional payments are represented in field 5 of the simplex state.</p>
 <p>AgentPay does <strong>not</strong> rely on Merkle proofs to summarize pending payments, since maintaining a Merkle root for a rapidly changing dataset is computationally expensive and would require additional on-chain transactions during disputes.</p>
 <p>Instead, the list of pending payment IDs is stored <strong>directly</strong> in the simplex state. Sending or clearing a conditional payment off-chain simply involves adding or removing its payment ID from the list (field 5) and, if applicable, updating the transferred amount (field 4).</p>
@@ -499,7 +499,7 @@ struct PayInfo {
 <li><strong>Cooperative withdrawal</strong> — completed instantly in a single transaction when both peers agree.</li>
 <li><strong>Unilateral withdrawal</strong> — used when a peer is unavailable, requiring two transactions and a challenge period.</li>
 </ul>
-<h4 id="cooperative-withdraw"><a class="header" href="#cooperative-withdraw"><strong>Cooperative withdraw</strong></a></h4>
+<h4 id="cooperative-withdraw"><a class="header" href="#cooperative-withdraw">Cooperative withdraw</a></h4>
 <p>When both peers are online and cooperative, the withdrawer can execute a withdrawal in one transaction by calling the <code>cooperativeWithdraw</code> API and providing the co-signed message:</p>
 <pre><code class="language-protobuf">message CooperativeWithdrawInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -510,14 +510,14 @@ struct PayInfo {
 }
 </code></pre>
 <p>Upon verification, <strong>AgentPayLedger</strong> transfers tokens from the channel’s <strong>AgentPayWallet</strong> either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.</p>
-<h4 id="unilateral-withdraw"><a class="header" href="#unilateral-withdraw"><strong>Unilateral withdraw</strong></a></h4>
+<h4 id="unilateral-withdraw"><a class="header" href="#unilateral-withdraw">Unilateral withdraw</a></h4>
 <p>If a peer cannot reach its counterparty for co-signing, it can initiate a unilateral withdrawal using <code>intendWithdraw(channel_id, amount, recipient_channel_id)</code>. This starts a <strong>challenge window</strong>, during which the counterparty may call <code>vetoWithdraw</code> to dispute the request. Once the window closes without objection, the withdrawer finalizes the operation by calling <code>confirmWithdraw</code>.</p>
 <p>This two-step mechanism guarantees both liveness and fairness when one peer is temporarily offline.</p>
 <hr>
 <h3 id="resolve-payment"><a class="header" href="#resolve-payment">Resolve Payment</a></h3>
 <p>When peers cannot cooperatively clear a payment off-chain, they can resolve it on-chain through the <strong>PayResolver</strong> contract before the payment’s resolve deadline (field 6 of the <a href="#conditional-payment">ConditionalPay message</a>). The resolver validates the payment’s final outcome and records it in the global <strong>PayRegistry</strong>, serving as a shared on-chain reference for all related channels.</p>
 <p>Payments can be resolved either by evaluating their <strong>conditions</strong> or by submitting a <strong>vouched result</strong> co-signed by the source and destination.</p>
-<h4 id="resolve-payment-by-conditions"><a class="header" href="#resolve-payment-by-conditions"><strong>Resolve payment by conditions</strong></a></h4>
+<h4 id="resolve-payment-by-conditions"><a class="header" href="#resolve-payment-by-conditions">Resolve payment by conditions</a></h4>
 <p>The <code>resolvePaymentByConditions</code> API of <strong>PayResolver</strong> is used once all conditions of a payment are finalized on-chain. The call includes:</p>
 <ol>
 <li>The complete <em>ConditionalPay</em> data.</li>
@@ -551,7 +551,7 @@ message CondPayResult {
 <hr>
 <h3 id="settle--close-channel"><a class="header" href="#settle--close-channel">Settle / Close Channel</a></h3>
 <p>A node can choose to <strong>settle or close a channel</strong> with its peer either <strong>cooperatively</strong> or <strong>unilaterally</strong>, similar to the withdrawal operation. Cooperative settling is preferred since it completes in a single transaction, while unilateral settling is used only when peers cannot agree or one party becomes unresponsive.</p>
-<h4 id="cooperative-settle"><a class="header" href="#cooperative-settle"><strong>Cooperative Settle</strong></a></h4>
+<h4 id="cooperative-settle"><a class="header" href="#cooperative-settle">Cooperative Settle</a></h4>
 <p>The <code>cooperativeSettle</code> API in <strong>AgentPayLedger</strong> allows peers to close a channel instantly with a co-signed request containing the final balance distribution.</p>
 <pre><code class="language-protobuf">message CooperativeSettleInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -564,7 +564,7 @@ message CondPayResult {
 }
 </code></pre>
 <p>Upon receiving a valid co-signed request, <strong>AgentPayLedger</strong> closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.</p>
-<h4 id="unilateral-settle"><a class="header" href="#unilateral-settle"><strong>Unilateral Settle</strong></a></h4>
+<h4 id="unilateral-settle"><a class="header" href="#unilateral-settle">Unilateral Settle</a></h4>
 <p>If cooperation is not possible, a peer can initiate a unilateral settle by calling <code>intendSettle</code>, providing the latest co-signed off-chain simplex states as input. <strong>AgentPayLedger</strong> computes the final balance distribution using these states and the outcomes of pending payments retrieved from the <strong>PayRegistry</strong>.</p>
 <p>A <strong>challenge window</strong> is then opened, allowing the counterparty to submit newer simplex states with higher sequence numbers if available. Once the window closes, the initiating peer can finalize the process by calling <code>confirmSettle</code>, which closes the channel and releases the final balances accordingly.</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -596,7 +596,7 @@ message CondPayResult {
 <h3 id="versioning-agentpayledger"><a class="header" href="#versioning-agentpayledger">Versioning AgentPayLedger</a></h3>
 <p>As introduced in Contracts Architecture, <strong>AgentPayLedger</strong> manages payment channel logic, while <strong>AgentPayWallet</strong> securely holds assets. Each wallet has multiple owners (the channel peers) and a single operator — its associated ledger contract. Different channel pairs may choose different AgentPayLedger versions, all interacting with the same AgentPayWallet contract.</p>
 <p>AgentPay allows <strong>channel peers to cooperatively migrate</strong> their AgentPayLedger to a new version while continuing to use the same wallet, with <em>zero off-chain downtime</em>.</p>
-<h4 id="agentpayledger-migration-process"><a class="header" href="#agentpayledger-migration-process"><strong>AgentPayLedger migration process</strong></a></h4>
+<h4 id="agentpayledger-migration-process"><a class="header" href="#agentpayledger-migration-process">AgentPayLedger migration process</a></h4>
 <p>Migration requires mutual consent from both channel peers via a co-signed migration message:</p>
 <pre><code class="language-protobuf">message ChannelMigrationInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -615,11 +615,11 @@ message CondPayResult {
 <li>The <strong>new ledger</strong> imports state data from the old ledger to initialize the channel entry.</li>
 </ol>
 <p>A migration request has higher priority than <code>intendSettle</code>, meaning peers can migrate even if the channel is in a <code>Settling</code> state. Upon migration, the channel becomes <code>Operable</code> again. This enables <strong>immediate off-chain upgrades with deferred on-chain finalization</strong>: once a migration is co-signed, peers can begin operating under the new logic off-chain before the transaction is executed.</p>
-<h4 id="zero-downtime-upgrade-flow"><a class="header" href="#zero-downtime-upgrade-flow"><strong>Zero-downtime upgrade flow</strong></a></h4>
+<h4 id="zero-downtime-upgrade-flow"><a class="header" href="#zero-downtime-upgrade-flow">Zero-downtime upgrade flow</a></h4>
 <p>Channel peers do not need to pause off-chain operations when migrating to a new AgentPayLedger version. The new logic becomes effective <em>as soon as the migration request is co-signed</em>, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.</p>
 <p>If the <code>SimplexPaymentChannel</code> message format remains unchanged, peers only need to co-sign the migration request and can continue exchanging off-chain payments seamlessly.</p>
 <p>If the proto definition changes, peers must first co-sign equivalent states using the new format (representing the same balances as the old states), then co-sign the migration request and continue under the new logic.</p>
-<h4 id="manual-fallback-upgrade"><a class="header" href="#manual-fallback-upgrade"><strong>Manual fallback upgrade</strong></a></h4>
+<h4 id="manual-fallback-upgrade"><a class="header" href="#manual-fallback-upgrade">Manual fallback upgrade</a></h4>
 <p>In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through <code>AgentPayWallet.proposeNewOperator</code>. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.</p>
 <hr>
 <h3 id="summary-2"><a class="header" href="#summary-2">Summary</a></h3>
@@ -711,7 +711,7 @@ message CondPayResult {
 <p>We start with the flow of <strong>boolean-conditional payments</strong>, which are expected to be the most common in practice. Because the condition outcomes are strictly <em>true</em> or <em>false</em>, these payments always resolve to either the full amount or zero.</p>
 <p>The end-to-end off-chain protocol follows AgentPay’s design principles — in particular, minimizing relay node on-chain interaction, on-chain view calls, and off-chain communication overhead.</p>
 <p>For boolean-conditional payments, <strong>relay nodes never need to interpret condition logic or perform any on-chain operation — even in the presence of malicious or offline participants along the route</strong>. This makes the core payment network highly robust and scalable.</p>
-<h3 id="properties-of-boolean-conditional-payments"><a class="header" href="#properties-of-boolean-conditional-payments"><strong>Properties of Boolean-Conditional Payments</strong></a></h3>
+<h3 id="properties-of-boolean-conditional-payments"><a class="header" href="#properties-of-boolean-conditional-payments">Properties of Boolean-Conditional Payments</a></h3>
 <p>Guided by the end-to-end principle, the boolean payment protocol is designed with the following properties:</p>
 <ul>
 <li><strong>Simple:</strong> Relay nodes are agnostic to application and condition logic.</li>
@@ -720,26 +720,26 @@ message CondPayResult {
 <li><strong>Low on-chain cost:</strong> Relay nodes never initiate on-chain disputes.</li>
 <li><strong>Low off-chain overhead:</strong> Relay nodes do not modify payment messages, and the number of message exchanges is minimized for both cooperative and uncooperative cases.</li>
 </ul>
-<h3 id="set-up-end-to-end-conditional-payment"><a class="header" href="#set-up-end-to-end-conditional-payment"><strong>Set up end-to-end conditional payment</strong></a></h3>
+<h3 id="set-up-end-to-end-conditional-payment"><a class="header" href="#set-up-end-to-end-conditional-payment">Set up end-to-end conditional payment</a></h3>
 <p>The setup process for an end-to-end multi-hop conditional payment is the same for both boolean and numeric conditions.</p>
 <p>The figure below illustrates the message flow where payment source <strong>A</strong> sends a conditional payment to destination <strong>D</strong> through relay nodes <strong>B</strong> and <strong>C</strong>.</p>
 <p><img src=".gitbook/assets/e2e-pay-setup.png" alt=""><figcaption></figcaption></p>
 <p>The conditional payment is established sequentially through simplex channels <strong>A–B</strong>, <strong>B–C</strong>, and <strong>C–D</strong>, following the <a href="#send-conditional-payment"><em>Send Conditional Payment</em></a> procedure described earlier.</p>
 <p>After the destination <strong>D</strong> receives the <code>CondPayRequest</code> from <strong>C</strong>, it sends a <code>CondPayReceipt</code> message directly back to the source <strong>A</strong>, confirming end-to-end receipt of the conditional payment. At this point, the setup process is complete if the payment does not include a hash-lock condition.</p>
 <p>If a hash lock condition is present, the source <strong>A</strong> must then reveal the preimage of the hash lock to <strong>D</strong> via a <code>RevealSecret</code> message. The end-to-end setup is finalized once <strong>A</strong> receives the corresponding <code>RevealSecretAck</code> from <strong>D</strong>.</p>
-<h3 id="source-pays-in-full-amount-on-true-outcome"><a class="header" href="#source-pays-in-full-amount-on-true-outcome"><strong>Source pays in full amount on true outcome</strong></a></h3>
+<h3 id="source-pays-in-full-amount-on-true-outcome"><a class="header" href="#source-pays-in-full-amount-on-true-outcome">Source pays in full amount on true outcome</a></h3>
 <p>Once the conditional payment is successfully set up, the nodes along the route cooperatively settle the payment hop by hop.</p>
 <p>The figure below shows the message flow when the payment source initiates settlement by paying the full amount to its peer. This can occur immediately after <strong>A</strong> receives the <code>RevealSecretAck</code> for a payment protected by a single hash lock, or after the associated App boolean conditions are finalized (off-chain) as <em>true</em>.</p>
 <p><img src=".gitbook/assets/e2e-pay-full.png" alt=""><figcaption></figcaption></p>
 <p>As shown above, when the condition evaluates to <em>true</em>, settlement begins from the payment source (<strong>A</strong>) and proceeds downstream toward the destination (<strong>D</strong>).</p>
 <p>Each relay node (<strong>B</strong>, <strong>C</strong>) transfers the full amount to its downstream peer only after receiving the same amount from its upstream peer. This ensures that every relay can forward the payment safely without evaluating any conditions or making on-chain queries, preserving both simplicity and trustlessness.</p>
-<h3 id="destination-rejects-the-payment-on-false-outcome"><a class="header" href="#destination-rejects-the-payment-on-false-outcome"><strong>Destination rejects the payment on false outcome</strong></a></h3>
+<h3 id="destination-rejects-the-payment-on-false-outcome"><a class="header" href="#destination-rejects-the-payment-on-false-outcome">Destination rejects the payment on false outcome</a></h3>
 <p>The figure below shows the message flow when the payment destination rejects the conditional payment. This occurs after the associated boolean conditions are finalized (off-chain) as <em>false</em>.</p>
 <p><img src=".gitbook/assets/e2e-pay-reject.png" alt=""><figcaption></figcaption></p>
 <p>When a conditional payment should not be paid, cooperative off-chain settlement begins from the payment destination (<strong>D</strong>) and proceeds upstream toward the source (<strong>A</strong>).</p>
 <p>Each relay node (<strong>B</strong>, <strong>C</strong>) rejects the payment from its upstream peer only after confirming that the payment has already been canceled with its downstream peer. This ensures that every relay can safely clear the payment without evaluating conditions or performing on-chain queries.</p>
 <p>A rejection flow may also be initiated by a relay node (<strong>B</strong> or <strong>C</strong>) if it has already accepted the conditional payment from its upstream peer but fails to forward it to its downstream peer.</p>
-<h3 id="settle-the-payment-on-chain"><a class="header" href="#settle-the-payment-on-chain"><strong>Settle the payment on-chain</strong></a></h3>
+<h3 id="settle-the-payment-on-chain"><a class="header" href="#settle-the-payment-on-chain">Settle the payment on-chain</a></h3>
 <p>The above sections described the cooperative end-to-end message flows for setting up and settling a conditional payment. If any node along the routing path behaves <strong>uncooperatively</strong>, <strong>an on-chain dispute</strong> can be triggered.</p>
 <p>For payments with <strong>boolean conditions</strong>, relay nodes never need to initiate disputes, since they face no security risk while forwarding payments. Only the <strong>payment source</strong> or <strong>destination</strong> may need to dispute, depending on which side is affected by misbehavior.</p>
 <p>The figure below illustrates a case where the payment destination (<strong>D</strong>) starts an on-chain dispute because it did not receive the full payment amount, possibly due to a failure or malicious action by an upstream node (<strong>A</strong>, <strong>B</strong>, or <strong>C</strong>).</p>
@@ -748,14 +748,14 @@ message CondPayResult {
 <p>Upon receiving the settle proof, <strong>C</strong> verifies <strong>D</strong>’s claim by querying the <strong>PayRegistry</strong>, and then sends a <code>PaymentSettleRequest</code> to <strong>D</strong> to pay the resolved amount. This settle proof is then passed further upstream, with each relay repeating the same process hop by hop until reaching the source <strong>A</strong>.</p>
 <p>If any upstream node (<strong>A</strong>, <strong>B</strong>, or <strong>C</strong>) remains uncooperative even after on-chain resolution, the downstream peer can choose to close the payment channel. Throughout the entire process, relay nodes never need to perform any payment-related on-chain transactions.</p>
 <p>If the payment conditions resolve to <em>false</em> but the source <strong>A</strong> has not received a settle proof to cancel the payment, it generally does <strong>not</strong> need to dispute on-chain. The payment will automatically clear off-chain after the resolve deadline, as discussed next. If <strong>A</strong> wishes to cancel the payment earlier, it may voluntarily resolve the payment on-chain and then settle off-chain with its downstream peer. This rare case is omitted from the diagram.</p>
-<h3 id="clear-expired-payments"><a class="header" href="#clear-expired-payments"><strong>Clear expired payments</strong></a></h3>
+<h3 id="clear-expired-payments"><a class="header" href="#clear-expired-payments">Clear expired payments</a></h3>
 <p>Each conditional payment has a resolve deadline (field 6 of the <a href="#conditional-payment">ConditionalPay</a> message). After this deadline, any unresolved or unsettled payment is considered <strong>expired</strong>. Once a payment expires, it can no longer be resolved on-chain — a rule enforced by the <strong>PayResolver</strong> contract. Therefore, a node can safely clear expired payments with both its upstream and downstream peers.</p>
 <p>When receiving a settle request to clear an expired payment, a node must verify that the resolve deadline has passed and that the payment is not already finalized on-chain (by checking the PayRegistry). Each Agent Node should periodically scan its pending payments and clear expired ones to maintain clean channel states and free up locked liquidity.</p>
 <hr>
 <h2 id="pay-with-numeric-conditions"><a class="header" href="#pay-with-numeric-conditions">Pay with Numeric Conditions</a></h2>
 <p>In addition to boolean conditions, AgentPay also supports numeric conditions and transfer functions as a built-in extension of the conditional payment framework. Numeric conditions allow the final payment amount to be <em>any value between zero and the maximum amount</em> (field 2 of the <a href="#transfer-function">TransferFunction message</a>), based on arbitrary application logic. This design enables a wide range of flexible off-chain applications, from data-dependent rewards to proportional settlements.</p>
 <p>The end-to-end setup flow for payments with numeric conditions is identical to that of <a href="#pay-with-boolean-conditions">boolean conditions</a>. If the payment resolves to either the full amount, zero, or becomes expired, the settlement flow also follows the same procedure described earlier. The only difference arises when the payment result is <strong>a partial value</strong>—somewhere between zero and the maximum amount. The following sections explain how AgentPay handles this case efficiently and securely.</p>
-<h3 id="properties-of-payments-with-numeric-conditions"><a class="header" href="#properties-of-payments-with-numeric-conditions"><strong>Properties of payments with numeric conditions</strong></a></h3>
+<h3 id="properties-of-payments-with-numeric-conditions"><a class="header" href="#properties-of-payments-with-numeric-conditions">Properties of payments with numeric conditions</a></h3>
 <p>Following the <strong>end-to-end design principle</strong>, the numeric conditional payment protocol maintains the same simplicity and robustness as the boolean version, while supporting more flexible outcomes. Its key properties are:</p>
 <ul>
 <li><strong>Simple:</strong> Relay nodes remain agnostic to application and condition logic.</li>
@@ -764,9 +764,9 @@ message CondPayResult {
 <li><strong>Low on-chain cost:</strong> Each payment requires at most one dispute along the entire routing path.</li>
 <li><strong>Low off-chain overhead:</strong> Relay nodes never modify payment messages, and message exchanges are optimized for both cooperative and uncooperative scenarios.</li>
 </ul>
-<h3 id="set-up-end-to-end-numeric-conditional-payment"><a class="header" href="#set-up-end-to-end-numeric-conditional-payment"><strong>Set up end-to-end numeric conditional payment</strong></a></h3>
+<h3 id="set-up-end-to-end-numeric-conditional-payment"><a class="header" href="#set-up-end-to-end-numeric-conditional-payment">Set up end-to-end numeric conditional payment</a></h3>
 <p>The setup process for an end-to-end multi-hop payment with numeric conditions is identical to that of <a href="#pay-with-boolean-conditions">boolean conditions</a>. Each hop sequentially establishes its conditional payment using the same off-chain message flow (<code>CondPayRequest</code> and <code>CondPayResponse</code>), ensuring consistent state updates and compatibility across all channel peers.</p>
-<h3 id="settle-the-payment-hop-by-hop-upstream"><a class="header" href="#settle-the-payment-hop-by-hop-upstream"><strong>Settle the payment hop-by-hop upstream</strong></a></h3>
+<h3 id="settle-the-payment-hop-by-hop-upstream"><a class="header" href="#settle-the-payment-hop-by-hop-upstream">Settle the payment hop-by-hop upstream</a></h3>
 <p>The figure below illustrates the cooperative settlement flow for payments with numeric conditions when all nodes behave honestly. The process begins at the payment destination (<em>D</em>) once the final payment result is determined to be a value between zero and the maximum amount.</p>
 <p><img src=".gitbook/assets/e2e-vouch.png" alt=""><figcaption></figcaption></p>
 <p>The destination <em>D</em> first sends a <code>PayResultVouchRequest</code> to the payment source <em>A</em>, producing a co-signed <a href="#resolve-payment-by-vouched-result">VouchedCondPayResult</a> that confirms both parties agree on the payment outcome. Then, <em>D</em> sends a <code>PaymentSettleProof</code> message to its upstream peer <em>C</em>, using the vouched result as proof. <em>C</em> verifies that the payment is not finalized at a smaller amount by querying the PayRegistry, then pays <em>D</em> the vouched amount off-chain. After receiving the settlement response, <em>C</em> forwards the same vouched result upstream to <em>B</em>, which repeats the same process. Finally, <em>A</em> settles with <em>B</em> directly without querying the registry, since <em>A</em> is itself the payment source that signed the vouched result.</p>
@@ -811,7 +811,7 @@ interface INumericOutcome {
 <p>Integrating an App with AgentPay is straightforward. Any App outcome—whether generated by an on-chain or off-chain virtual contract—can directly trigger an off-chain token transfer through AgentPay’s conditional payment interface.</p>
 <p>To illustrate, consider a simple example with two participants (or AI agents) interacting in an App channel that represents a competitive or cooperative task. When the App outcome is finalized—such as determining the winner of a game, verifying a ZK-proof, or completing a joint computation—AgentPay automatically settles payments according to the predefined conditions.</p>
 <p>For simplicity, this section uses a two-player game as the example: both players lock funds into an AgentPay channel, and conditional payments are made based on who wins. More complex cases, including multi-party collaborations, tiered numeric payouts, or probabilistic reward distributions, follow the same workflow pattern.</p>
-<h3 id="play-the-game-with-conditional-payments-to-the-winner"><a class="header" href="#play-the-game-with-conditional-payments-to-the-winner"><strong>Play the Game with Conditional Payments to the Winner</strong></a></h3>
+<h3 id="play-the-game-with-conditional-payments-to-the-winner"><a class="header" href="#play-the-game-with-conditional-payments-to-the-winner">Play the Game with Conditional Payments to the Winner</a></h3>
 <p><img src=".gitbook/assets/app-send-pay.png" alt=""><figcaption></figcaption></p>
 <p>Figure above shows the message flow during the game setup and playing phase. <em>A</em> and <em>D</em> are players of an off-chain game App channel. Black lines represent messages related to game logic, while purple and orange lines represent conditional payment messages from <em>A</em> and <em>D</em>, respectively. Dashed lines indicate direct communication between <em>A</em> and <em>D</em>, without involving relay nodes.</p>
 <p>The steps are summarized as follows:</p>
@@ -821,11 +821,11 @@ interface INumericOutcome {
 <li><em>A</em> and <em>D</em> then play the game entirely off-chain by exchanging signed game states until reaching an outcome, either cooperatively or (if needed) through an on-chain settlement.</li>
 </ol>
 <p><strong>Note on state progression:</strong> The integrated workflow is agnostic to how App states evolve or settle. Any App channel logic or state progression protocol can be seamlessly supported within this framework.</p>
-<h3 id="settle-the-payments-when-the-loser-is-cooperative"><a class="header" href="#settle-the-payments-when-the-loser-is-cooperative"><strong>Settle the Payments When the Loser Is Cooperative</strong></a></h3>
+<h3 id="settle-the-payments-when-the-loser-is-cooperative"><a class="header" href="#settle-the-payments-when-the-loser-is-cooperative">Settle the Payments When the Loser Is Cooperative</a></h3>
 <p><img src=".gitbook/assets/app-settle-pay.png" alt=""><figcaption></figcaption></p>
 <p>Figure above shows the message flow when <em>A</em>, after losing the game off-chain, follows the protocol to settle payments cooperatively. The honest loser <em>A</em> initiates the settlement of both conditional payments: <a href="#source-pays-in-full-amount-on-true-outcome">paying the full amount</a> for its own conditional payment to <em>D</em>, and <a href="#destination-rejects-the-payment-on-false-outcome">rejecting the conditional payment</a> from <em>D</em>. The workflow completes once the winner <em>D</em> confirms settlement of both payments.</p>
 <p><strong>There are zero on-chain transactions throughout the entire lifecycle</strong>—from when the two players agree to play the game, to the final prize distribution—so long as all participants behave cooperatively. The App contract and its logic remain purely virtual and only need to appear on-chain in the rare case of a dispute.</p>
-<h3 id="settle-the-payments-when-the-loser-is-uncooperative"><a class="header" href="#settle-the-payments-when-the-loser-is-uncooperative"><strong>Settle the Payments When the Loser Is Uncooperative</strong></a></h3>
+<h3 id="settle-the-payments-when-the-loser-is-uncooperative"><a class="header" href="#settle-the-payments-when-the-loser-is-uncooperative">Settle the Payments When the Loser Is Uncooperative</a></h3>
 <p><img src=".gitbook/assets/app-dispute-pay.png" alt=""><figcaption></figcaption></p>
 <p>Figure above shows the message flow when <em>A</em> loses the game but refuses to settle the conditional payments off-chain. To claim the prize, the winner <em>D</em> initiates a dispute, resolves the payment on-chain, and completes settlement with its upstream peer. <strong>Relay nodes (</strong><em><strong>B</strong></em><strong> and </strong><em><strong>C</strong></em><strong>) never need to perform any on-chain transactions</strong>, even when the end players (<em>A</em> and <em>D</em>) fail to cooperate.</p>
 <p>The workflow proceeds as follows:</p>
@@ -887,10 +887,10 @@ interface INumericOutcome {
 </ol>
 <p>The guarded state can also be retrieved through the SGN’s off-chain <code>getChannelState</code> API whenever the Agent reconnects.</p>
 <p>SGN offers two service modes, giving Agents flexibility between <strong>speed</strong> and <strong>privacy</strong>.</p>
-<h3 id="fast-mode"><a class="header" href="#fast-mode"><strong>Fast Mode</strong></a></h3>
+<h3 id="fast-mode"><a class="header" href="#fast-mode">Fast Mode</a></h3>
 <p>In Fast Mode, the guard request includes the latest co-signed state proof. When a settlement attempt is detected, the assigned SGN guardian simply submits the <code>intendSettle</code> transaction with this guarded state proof. After the settlement process completes, the channel can be finalized by any participant via the standard <code>confirmSettle</code> transaction.</p>
 <p>This mode provides the lowest latency and simplest workflow, suitable for most use cases where privacy is not a primary concern. Although validators see sequence numbers and aggregate balance proofs, they cannot infer detailed payment routes or conditions. Off-chain transactions under Fast Mode already provide better privacy than on-chain transfers.</p>
-<h3 id="private-mode"><a class="header" href="#private-mode"><strong>Private Mode</strong></a></h3>
+<h3 id="private-mode"><a class="header" href="#private-mode">Private Mode</a></h3>
 <p>For users requiring stronger privacy guarantees, Private Mode limits what information is revealed to SGN. Instead of sending the full state proof, the Agent provides only the minimal tuple:</p>
 <pre><code>cps = &lt;channel_id, peer_from, seq_num, signatures&gt;
 </code></pre>
@@ -906,7 +906,7 @@ interface INumericOutcome {
 <hr>
 <h2 id="guardian-assignment-and-incentives"><a class="header" href="#guardian-assignment-and-incentives"><strong>Guardian Assignment and Incentives</strong></a></h2>
 <p>SGN validators collectively serve as decentralized <em>channel guardians</em>, providing continuous on-chain monitoring and timely response services that protect AgentPay channels during dispute windows. Each validator independently tracks on-chain events and collectively reaches consensus within SGN when a guarded channel requires action.</p>
-<h3 id="assignment-model"><a class="header" href="#assignment-model"><strong>Assignment Model</strong></a></h3>
+<h3 id="assignment-model"><a class="header" href="#assignment-model">Assignment Model</a></h3>
 <p>For every guarded channel, SGN selects a subset of validators as <em>active guardians</em>, with the remainder serving as <em>standby guardians</em>. When a settlement attempt is detected on a guarded channel:</p>
 <ul>
 <li>Validators independently verify the event and may broadcast a valid guard transaction after a short randomized delay determined by their assignment order.</li>
@@ -914,7 +914,7 @@ interface INumericOutcome {
 <li>All validators observe and agree on the event within SGN through the same event-sync and consensus mechanism already used for cross-chain message verification in cBridge and CelerIM.</li>
 </ul>
 <p>This model enables fast, decentralized, and reliable protection without redundant transactions or coordination overhead.</p>
-<h3 id="economic-incentives"><a class="header" href="#economic-incentives"><strong>Economic Incentives</strong></a></h3>
+<h3 id="economic-incentives"><a class="header" href="#economic-incentives">Economic Incentives</a></h3>
 <p>Each AgentPay channel can register a <strong>guard service fee</strong>, which may be structured as either a per-request fee or a recurring subscription fee.<br>This fee is divided into two parts:</p>
 <ol>
 <li><strong>Active Guard Reward:</strong> Granted to the validator that first submits a valid on-chain guard transaction when a dispute occurs.</li>
@@ -922,7 +922,7 @@ interface INumericOutcome {
 </ol>
 <p>If no on-chain settlement is ever triggered—which is the expected case under normal cooperative operation—the validator network still receives the baseline staking reward from accumulated subscription fees, reflecting its ongoing availability and coverage commitment.</p>
 <p>This model ensures that validators are <strong>rewarded both for readiness and for action</strong>, sustaining long-term participation while keeping user costs predictable and minimal.</p>
-<h3 id="accountability-and-reputation"><a class="header" href="#accountability-and-reputation"><strong>Accountability and Reputation</strong></a></h3>
+<h3 id="accountability-and-reputation"><a class="header" href="#accountability-and-reputation">Accountability and Reputation</a></h3>
 <p>Each validator maintains a <strong>guardian reliability score</strong> based on measurable performance metrics, including uptime, event monitoring responsiveness, and historical success in submitting valid guard transactions.</p>
 <p>Validators with higher scores gain higher assignment priority for future guard requests and receive proportionally greater reward shares from the baseline staking distribution. Occasional missed events only affect reputation and future assignment weighting—without risking stake slashing—whereas deliberate protocol violations, such as falsifying SGN consensus or submitting invalid guard proofs, remain subject to on-chain penalties.</p>
 <p>This model ensures <strong>trust-any safety</strong> for users while preserving a <strong>validator-friendly and sustainable</strong> operating environment that rewards consistent service quality over time.</p>

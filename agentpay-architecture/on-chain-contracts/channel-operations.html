@@ -222,7 +222,7 @@
 <li><strong>Cooperative withdrawal</strong> — completed instantly in a single transaction when both peers agree.</li>
 <li><strong>Unilateral withdrawal</strong> — used when a peer is unavailable, requiring two transactions and a challenge period.</li>
 </ul>
-<h4 id="cooperative-withdraw"><a class="header" href="#cooperative-withdraw"><strong>Cooperative withdraw</strong></a></h4>
+<h4 id="cooperative-withdraw"><a class="header" href="#cooperative-withdraw">Cooperative withdraw</a></h4>
 <p>When both peers are online and cooperative, the withdrawer can execute a withdrawal in one transaction by calling the <code>cooperativeWithdraw</code> API and providing the co-signed message:</p>
 <pre><code class="language-protobuf">message CooperativeWithdrawInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -233,14 +233,14 @@
 }
 </code></pre>
 <p>Upon verification, <strong>AgentPayLedger</strong> transfers tokens from the channel’s <strong>AgentPayWallet</strong> either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.</p>
-<h4 id="unilateral-withdraw"><a class="header" href="#unilateral-withdraw"><strong>Unilateral withdraw</strong></a></h4>
+<h4 id="unilateral-withdraw"><a class="header" href="#unilateral-withdraw">Unilateral withdraw</a></h4>
 <p>If a peer cannot reach its counterparty for co-signing, it can initiate a unilateral withdrawal using <code>intendWithdraw(channel_id, amount, recipient_channel_id)</code>. This starts a <strong>challenge window</strong>, during which the counterparty may call <code>vetoWithdraw</code> to dispute the request. Once the window closes without objection, the withdrawer finalizes the operation by calling <code>confirmWithdraw</code>.</p>
 <p>This two-step mechanism guarantees both liveness and fairness when one peer is temporarily offline.</p>
 <hr>
 <h3 id="resolve-payment"><a class="header" href="#resolve-payment">Resolve Payment</a></h3>
 <p>When peers cannot cooperatively clear a payment off-chain, they can resolve it on-chain through the <strong>PayResolver</strong> contract before the payment’s resolve deadline (field 6 of the <a href="core-data-structures.html#conditional-payment">ConditionalPay message</a>). The resolver validates the payment’s final outcome and records it in the global <strong>PayRegistry</strong>, serving as a shared on-chain reference for all related channels.</p>
 <p>Payments can be resolved either by evaluating their <strong>conditions</strong> or by submitting a <strong>vouched result</strong> co-signed by the source and destination.</p>
-<h4 id="resolve-payment-by-conditions"><a class="header" href="#resolve-payment-by-conditions"><strong>Resolve payment by conditions</strong></a></h4>
+<h4 id="resolve-payment-by-conditions"><a class="header" href="#resolve-payment-by-conditions">Resolve payment by conditions</a></h4>
 <p>The <code>resolvePaymentByConditions</code> API of <strong>PayResolver</strong> is used once all conditions of a payment are finalized on-chain. The call includes:</p>
 <ol>
 <li>The complete <em>ConditionalPay</em> data.</li>
@@ -274,7 +274,7 @@ message CondPayResult {
 <hr>
 <h3 id="settle--close-channel"><a class="header" href="#settle--close-channel">Settle / Close Channel</a></h3>
 <p>A node can choose to <strong>settle or close a channel</strong> with its peer either <strong>cooperatively</strong> or <strong>unilaterally</strong>, similar to the withdrawal operation. Cooperative settling is preferred since it completes in a single transaction, while unilateral settling is used only when peers cannot agree or one party becomes unresponsive.</p>
-<h4 id="cooperative-settle"><a class="header" href="#cooperative-settle"><strong>Cooperative Settle</strong></a></h4>
+<h4 id="cooperative-settle"><a class="header" href="#cooperative-settle">Cooperative Settle</a></h4>
 <p>The <code>cooperativeSettle</code> API in <strong>AgentPayLedger</strong> allows peers to close a channel instantly with a co-signed request containing the final balance distribution.</p>
 <pre><code class="language-protobuf">message CooperativeSettleInfo {
     bytes channel_id = 1 [(soltype) = "bytes32"];
@@ -287,7 +287,7 @@ message CondPayResult {
 }
 </code></pre>
 <p>Upon receiving a valid co-signed request, <strong>AgentPayLedger</strong> closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.</p>
-<h4 id="unilateral-settle"><a class="header" href="#unilateral-settle"><strong>Unilateral Settle</strong></a></h4>
+<h4 id="unilateral-settle"><a class="header" href="#unilateral-settle">Unilateral Settle</a></h4>
 <p>If cooperation is not possible, a peer can initiate a unilateral settle by calling <code>intendSettle</code>, providing the latest co-signed off-chain simplex states as input. <strong>AgentPayLedger</strong> computes the final balance distribution using these states and the outcomes of pending payments retrieved from the <strong>PayRegistry</strong>.</p>
 <p>A <strong>challenge window</strong> is then opened, allowing the counterparty to submit newer simplex states with higher sequence numbers if available. Once the window closes, the initiating peer can finalize the process by calling <code>confirmSettle</code>, which closes the channel and releases the final balances accordingly.</p>
 
