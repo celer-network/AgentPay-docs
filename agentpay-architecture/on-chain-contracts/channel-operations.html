@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-49c4540e.js";
+            window.path_to_searchindex_js = "../../searchindex-c986cc6b.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -271,6 +271,12 @@ message CondPayResult {
 <li>Otherwise, a <strong>challenge window</strong> (field 7 of ConditionalPay) opens, during which others may re-resolve the payment with additional evidence.</li>
 </ul>
 <p>During the challenge period, a result can only be updated <strong>to a higher amount</strong>, never lower—a protection mechanism for relay nodes aligned with off-chain protocol guarantees. The result becomes final when the challenge window closes or the resolve deadline passes, whichever comes first.</p>
+<hr>
+<h3 id="snapshot-states"><a class="header" href="#snapshot-states">Snapshot States</a></h3>
+<p>Channel peers can record co-signed off-chain simplex states on-chain as a lightweight <strong>state checkpoint</strong>, without closing the channel or processing pending payments. This is useful before a planned offline period, or as periodic insurance against later disputes: once a state is recorded on-chain, no older state can be used to settle the channel unilaterally.</p>
+<p>The <code>snapshotStates</code> API of <strong>AgentPayLedger</strong> accepts a co-signed array of simplex states. The states may belong to <strong>different channels</strong> — <code>snapshotStates</code> natively supports multi-channel batch processing in a single transaction, reducing gas overhead for service nodes that maintain many channels at once.</p>
+<p>Upon receiving a valid request, <strong>AgentPayLedger</strong> verifies the co-signatures and updates the on-chain record of each simplex state’s sequence number and transferred balance. The channel stays in the <code>Operable</code> state — no challenge window opens, pending payments are not processed, and normal off-chain operation continues.</p>
+<p>Snapshotting is a self-service alternative to delegating state protection to the <a href="../../state-guardian-network/sgn-as-channel-guardian.html">State Guardian Network</a>; the two approaches can also be combined.</p>
 <hr>
 <h3 id="settle--close-channel"><a class="header" href="#settle--close-channel">Settle / Close Channel</a></h3>
 <p>A node can choose to <strong>settle or close a channel</strong> with its peer either <strong>cooperatively</strong> or <strong>unilaterally</strong>, similar to the withdrawal operation. Cooperative settling is preferred since it completes in a single transaction, while unilateral settling is used only when peers cannot agree or one party becomes unresponsive.</p>
