@@ -16,7 +16,7 @@ The end-to-end off-chain protocol follows AgentPay’s design principles — in 
 
 For boolean-conditional payments, **relay nodes never need to interpret condition logic or perform any on-chain operation — even in the presence of malicious or offline participants along the route**. This makes the core payment network highly robust and scalable.
 
-### **Properties of Boolean-Conditional Payments**
+### Properties of Boolean-Conditional Payments
 
 Guided by the end-to-end principle, the boolean payment protocol is designed with the following properties:
 
@@ -26,7 +26,7 @@ Guided by the end-to-end principle, the boolean payment protocol is designed wit
 * **Low on-chain cost:** Relay nodes never initiate on-chain disputes.
 * **Low off-chain overhead:** Relay nodes do not modify payment messages, and the number of message exchanges is minimized for both cooperative and uncooperative cases.
 
-### **Set up end-to-end conditional payment**
+### Set up end-to-end conditional payment
 
 The setup process for an end-to-end multi-hop conditional payment is the same for both boolean and numeric conditions.
 
@@ -40,7 +40,7 @@ After the destination **D** receives the `CondPayRequest` from **C**, it sends a
 
 If a hash lock condition is present, the source **A** must then reveal the preimage of the hash lock to **D** via a `RevealSecret` message. The end-to-end setup is finalized once **A** receives the corresponding `RevealSecretAck` from **D**.
 
-### **Source pays in full amount on true outcome**
+### Source pays in full amount on true outcome
 
 Once the conditional payment is successfully set up, the nodes along the route cooperatively settle the payment hop by hop.
 
@@ -52,7 +52,7 @@ As shown above, when the condition evaluates to _true_, settlement begins from t
 
 Each relay node (**B**, **C**) transfers the full amount to its downstream peer only after receiving the same amount from its upstream peer. This ensures that every relay can forward the payment safely without evaluating any conditions or making on-chain queries, preserving both simplicity and trustlessness.
 
-### **Destination rejects the payment on false outcome**
+### Destination rejects the payment on false outcome
 
 The figure below shows the message flow when the payment destination rejects the conditional payment. This occurs after the associated boolean conditions are finalized (off-chain) as _false_.
 
@@ -64,7 +64,7 @@ Each relay node (**B**, **C**) rejects the payment from its upstream peer only a
 
 A rejection flow may also be initiated by a relay node (**B** or **C**) if it has already accepted the conditional payment from its upstream peer but fails to forward it to its downstream peer.
 
-### **Settle the payment on-chain**
+### Settle the payment on-chain
 
 The above sections described the cooperative end-to-end message flows for setting up and settling a conditional payment. If any node along the routing path behaves **uncooperatively**, **an on-chain dispute** can be triggered.
 
@@ -82,7 +82,7 @@ If any upstream node (**A**, **B**, or **C**) remains uncooperative even after o
 
 If the payment conditions resolve to _false_ but the source **A** has not received a settle proof to cancel the payment, it generally does **not** need to dispute on-chain. The payment will automatically clear off-chain after the resolve deadline, as discussed next. If **A** wishes to cancel the payment earlier, it may voluntarily resolve the payment on-chain and then settle off-chain with its downstream peer. This rare case is omitted from the diagram.
 
-### **Clear expired payments**
+### Clear expired payments
 
 Each conditional payment has a resolve deadline (field 6 of the [ConditionalPay](../on-chain-contracts/core-data-structures.md#conditional-payment) message). After this deadline, any unresolved or unsettled payment is considered **expired**. Once a payment expires, it can no longer be resolved on-chain — a rule enforced by the **PayResolver** contract. Therefore, a node can safely clear expired payments with both its upstream and downstream peers.
 
@@ -96,7 +96,7 @@ In addition to boolean conditions, AgentPay also supports numeric conditions and
 
 The end-to-end setup flow for payments with numeric conditions is identical to that of [boolean conditions](end-to-end-protocols.md#pay-with-boolean-conditions). If the payment resolves to either the full amount, zero, or becomes expired, the settlement flow also follows the same procedure described earlier. The only difference arises when the payment result is **a partial value**—somewhere between zero and the maximum amount. The following sections explain how AgentPay handles this case efficiently and securely.
 
-### **Properties of payments with numeric conditions**
+### Properties of payments with numeric conditions
 
 Following the **end-to-end design principle**, the numeric conditional payment protocol maintains the same simplicity and robustness as the boolean version, while supporting more flexible outcomes. Its key properties are:
 
@@ -106,11 +106,11 @@ Following the **end-to-end design principle**, the numeric conditional payment p
 * **Low on-chain cost:** Each payment requires at most one dispute along the entire routing path.
 * **Low off-chain overhead:** Relay nodes never modify payment messages, and message exchanges are optimized for both cooperative and uncooperative scenarios.
 
-### **Set up end-to-end numeric conditional payment**
+### Set up end-to-end numeric conditional payment
 
 The setup process for an end-to-end multi-hop payment with numeric conditions is identical to that of [boolean conditions](end-to-end-protocols.md#pay-with-boolean-conditions). Each hop sequentially establishes its conditional payment using the same off-chain message flow (`CondPayRequest` and `CondPayResponse`), ensuring consistent state updates and compatibility across all channel peers.
 
-### **Settle the payment hop-by-hop upstream**
+### Settle the payment hop-by-hop upstream
 
 The figure below illustrates the cooperative settlement flow for payments with numeric conditions when all nodes behave honestly. The process begins at the payment destination (_D_) once the final payment result is determined to be a value between zero and the maximum amount.
 

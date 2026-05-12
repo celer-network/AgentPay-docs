@@ -21,13 +21,13 @@ The guarded state can also be retrieved through the SGN’s off-chain `getChanne
 
 SGN offers two service modes, giving Agents flexibility between **speed** and **privacy**.
 
-### **Fast Mode**
+### Fast Mode
 
 In Fast Mode, the guard request includes the latest co-signed state proof. When a settlement attempt is detected, the assigned SGN guardian simply submits the `intendSettle` transaction with this guarded state proof. After the settlement process completes, the channel can be finalized by any participant via the standard `confirmSettle` transaction.
 
 This mode provides the lowest latency and simplest workflow, suitable for most use cases where privacy is not a primary concern. Although validators see sequence numbers and aggregate balance proofs, they cannot infer detailed payment routes or conditions. Off-chain transactions under Fast Mode already provide better privacy than on-chain transfers.
 
-### **Private Mode**
+### Private Mode
 
 For users requiring stronger privacy guarantees, Private Mode limits what information is revealed to SGN. Instead of sending the full state proof, the Agent provides only the minimal tuple:
 
@@ -53,7 +53,7 @@ This ensures no peer can block the channel closure by indefinitely vetoing settl
 
 SGN validators collectively serve as decentralized _channel guardians_, providing continuous on-chain monitoring and timely response services that protect AgentPay channels during dispute windows. Each validator independently tracks on-chain events and collectively reaches consensus within SGN when a guarded channel requires action.
 
-### **Assignment Model**
+### Assignment Model
 
 For every guarded channel, SGN selects a subset of validators as _active guardians_, with the remainder serving as _standby guardians_. When a settlement attempt is detected on a guarded channel:
 
@@ -63,7 +63,7 @@ For every guarded channel, SGN selects a subset of validators as _active guardia
 
 This model enables fast, decentralized, and reliable protection without redundant transactions or coordination overhead.
 
-### **Economic Incentives**
+### Economic Incentives
 
 Each AgentPay channel can register a **guard service fee**, which may be structured as either a per-request fee or a recurring subscription fee.\
 This fee is divided into two parts:
@@ -75,7 +75,7 @@ If no on-chain settlement is ever triggered—which is the expected case under n
 
 This model ensures that validators are **rewarded both for readiness and for action**, sustaining long-term participation while keeping user costs predictable and minimal.
 
-### **Accountability and Reputation**
+### Accountability and Reputation
 
 Each validator maintains a **guardian reliability score** based on measurable performance metrics, including uptime, event monitoring responsiveness, and historical success in submitting valid guard transactions.
 

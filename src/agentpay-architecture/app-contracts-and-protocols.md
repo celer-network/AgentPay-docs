@@ -40,7 +40,7 @@ To illustrate, consider a simple example with two participants (or AI agents) in
 
 For simplicity, this section uses a two-player game as the example: both players lock funds into an AgentPay channel, and conditional payments are made based on who wins. More complex cases, including multi-party collaborations, tiered numeric payouts, or probabilistic reward distributions, follow the same workflow pattern.
 
-### **Play the Game with Conditional Payments to the Winner**
+### Play the Game with Conditional Payments to the Winner
 
 <img src="../.gitbook/assets/app-send-pay.png" alt=""><figcaption></figcaption>
 
@@ -54,7 +54,7 @@ The steps are summarized as follows:
 
 **Note on state progression:** The integrated workflow is agnostic to how App states evolve or settle. Any App channel logic or state progression protocol can be seamlessly supported within this framework.
 
-### **Settle the Payments When the Loser Is Cooperative**
+### Settle the Payments When the Loser Is Cooperative
 
 <img src="../.gitbook/assets/app-settle-pay.png" alt=""><figcaption></figcaption>
 
@@ -62,7 +62,7 @@ Figure above shows the message flow when _A_, after losing the game off-chain, f
 
 **There are zero on-chain transactions throughout the entire lifecycle**—from when the two players agree to play the game, to the final prize distribution—so long as all participants behave cooperatively. The App contract and its logic remain purely virtual and only need to appear on-chain in the rare case of a dispute.
 
-### **Settle the Payments When the Loser Is Uncooperative**
+### Settle the Payments When the Loser Is Uncooperative
 
 <img src="../.gitbook/assets/app-dispute-pay.png" alt=""><figcaption></figcaption>
 
