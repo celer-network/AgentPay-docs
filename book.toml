@@ -6,5 +6,5 @@ language = "en"
 [output.html]
 theme = "theme"
 additional-css = ["theme/custom.css"]
-additional-js = ["theme/highlight-protobuf.js"]
+additional-js = ["theme/highlight-protobuf.js", "theme/highlight-solidity.js"]
 site-url = "/"
