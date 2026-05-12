@@ -13,7 +13,7 @@ The AgentPayWallet contract maintains multi-owner, multi-token wallets for all A
 Each wallet defines two distinct roles:
 
 * **Owners** — the channel peers who jointly own the wallet and receive withdrawn funds.
-* **Operator** — a single contract (typically a AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.
+* **Operator** — a single contract (typically an AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.
 
 AgentPayWallet exposes only the minimal, highly-audited functions needed to create wallets, deposit and withdraw tokens, and transfer operatorship. This simplicity makes it extremely robust and safe. A single AgentPayWallet contract is shared across the entire network. Channel peers never interact with it directly; instead, they access their funds through its operator — the AgentPayLedger contract described next.
 
