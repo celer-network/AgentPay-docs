@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-be55977c.js";
+            window.path_to_searchindex_js = "searchindex-49c4540e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-893e7167.js"></script>
@@ -225,7 +225,7 @@
 <hr>
 <h3 id="summary-1"><a class="header" href="#summary-1">Summary</a></h3>
 <p>Celer AgentPay enables real-time, trust-free payments among autonomous AI agents by combining on-chain security with off-chain performance. Its architecture separates the payment channel, app channel, and agent network—supporting programmable conditional payments, lightweight virtual application sessions, and a homogeneous peer-to-peer network of agents and service nodes.</p>
-<p>Guided by principles that minimize on-chain cost, reduce communication overhead, and preserve modularity, AgentPay provides a scalable and extensible foundation for autonomous economic coordination across blockchains and AI ecosystems.\</p>
+<p>Guided by principles that minimize on-chain cost, reduce communication overhead, and preserve modularity, AgentPay provides a scalable and extensible foundation for autonomous economic coordination across blockchains and AI ecosystems.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="on-chain-contracts"><a class="header" href="#on-chain-contracts">On-Chain Contracts</a></h1>
 <p>This section describes the core structure of the Celer AgentPay generalized state-channel system, its on-chain contract design, and the API flows for on-chain operations.</p>
@@ -421,7 +421,7 @@ struct PayInfo {
 <p>Each wallet defines two distinct roles:</p>
 <ul>
 <li><strong>Owners</strong> — the channel peers who jointly own the wallet and receive withdrawn funds.</li>
-<li><strong>Operator</strong> — a single contract (typically a AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.</li>
+<li><strong>Operator</strong> — a single contract (typically an AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.</li>
 </ul>
 <p>AgentPayWallet exposes only the minimal, highly-audited functions needed to create wallets, deposit and withdraw tokens, and transfer operatorship. This simplicity makes it extremely robust and safe. A single AgentPayWallet contract is shared across the entire network. Channel peers never interact with it directly; instead, they access their funds through its operator — the AgentPayLedger contract described next.</p>
 <h3 id="agentpayledger"><a class="header" href="#agentpayledger">AgentPayLedger</a></h3>

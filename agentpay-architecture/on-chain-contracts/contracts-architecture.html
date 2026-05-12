@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-be55977c.js";
+            window.path_to_searchindex_js = "../../searchindex-49c4540e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -184,7 +184,7 @@
 <p>Each wallet defines two distinct roles:</p>
 <ul>
 <li><strong>Owners</strong> — the channel peers who jointly own the wallet and receive withdrawn funds.</li>
-<li><strong>Operator</strong> — a single contract (typically a AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.</li>
+<li><strong>Operator</strong> — a single contract (typically an AgentPayLedger) authorized to manage wallet operations. The operator can (1) withdraw funds on behalf of owners and (2) transfer operatorship to another ledger version during a coordinated migration.</li>
 </ul>
 <p>AgentPayWallet exposes only the minimal, highly-audited functions needed to create wallets, deposit and withdraw tokens, and transfer operatorship. This simplicity makes it extremely robust and safe. A single AgentPayWallet contract is shared across the entire network. Channel peers never interact with it directly; instead, they access their funds through its operator — the AgentPayLedger contract described next.</p>
 <h3 id="agentpayledger"><a class="header" href="#agentpayledger">AgentPayLedger</a></h3>
