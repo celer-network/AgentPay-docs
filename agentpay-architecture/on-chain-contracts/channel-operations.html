@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-439fc48d.js";
+            window.path_to_searchindex_js = "../../searchindex-115dba3e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -247,7 +247,7 @@
 <li>All <em>hash preimages</em> for any hash-lock conditions.</li>
 </ol>
 <p>The contract verifies the preimages, queries each condition’s outcome, and computes the resulting amount, which is then written to the <strong>PayRegistry</strong>.</p>
-<p>All conditions must be finalized before the call executes; otherwise, the transaction will revert. For payments referencing <strong>virtual contracts</strong>, those must first be instantiated on-chain through <strong>VirtContractResolver</strong>—part of the broader App Channel layer rather than the core AgentPay logic.</p>
+<p>All conditions must be finalized before the call executes; otherwise, the transaction will revert. For payments referencing <strong>virtual contracts</strong>, those must first be instantiated on-chain through the <a href="contracts-architecture.html#virtcontractresolver">VirtContractResolver</a> contract — invoked only in the dispute path, when an off-chain virtual App contract needs to be materialized for resolution.</p>
 <p>Only the <strong>payment source</strong> or <strong>destination</strong> can initiate this operation; relay nodes never do. The complete flow is described in the <a href="../off-chain-protocols/">off-chain protocol</a> section.</p>
 <h4 id="resolve-payment-by-vouched-result"><a class="header" href="#resolve-payment-by-vouched-result">Resolve Payment by Vouched Result</a></h4>
 <p>Relay nodes never need to evaluate payment conditions themselves. In routed payments, conditions are relevant only to the original source and final destination, while intermediate relays care solely about the amount they should safely receive from upstream and forward downstream.</p>

@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-439fc48d.js";
+            window.path_to_searchindex_js = "../../searchindex-115dba3e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -178,7 +178,7 @@
                         <h1 id="single-hop-protocols"><a class="header" href="#single-hop-protocols">Single-Hop Protocols</a></h1>
 <p>A single-hop conditional payment forms the fundamental building block of the AgentPay network. It underpins the system’s <strong>high performance, robustness, and flexibility</strong>, and serves as the basis for constructing multi-hop and end-to-end payments. Understanding the single-hop conditional payment structure and the associated messaging protocol is essential before exploring the higher-level constructs.</p>
 <p>As described earlier, AgentPay adopts a <a href="../on-chain-contracts/core-data-structures.html#duplex-payment-channel">full-duplex channel model</a> to maximize off-chain throughput. If two peers instead shared a single state struct with one global sequence number, they would need to synchronize every update, introducing contention and latency.</p>
-<p>By contrast, a duplex channel splits the shared state into two <strong>unidirectional simplex channels</strong>, each with an independent sequence number. This allows both peers to send payments concurrently without coordination overhead. To prevent race conditions, only the <code>peer_from</code> (field 2 of the <a href="../on-chain-contracts/core-data-structures.html#simplex-channel-state">simplex channe</a>l) is permitted to initiate state updates. Each off-chain update follows a simple two-step handshake:</p>
+<p>By contrast, a duplex channel splits the shared state into two <strong>unidirectional simplex channels</strong>, each with an independent sequence number. This allows both peers to send payments concurrently without coordination overhead. To prevent race conditions, only the <code>peer_from</code> (field 2 of the <a href="../on-chain-contracts/core-data-structures.html#simplex-channel-state">simplex channel</a>) is permitted to initiate state updates. Each off-chain update follows a simple two-step handshake:</p>
 <ol>
 <li>The <code>peer_from</code> creates a new simplex state, signs it, and sends it to the counterparty.</li>
 <li>The counterparty verifies the update and returns the co-signed new off-chain state.</li>

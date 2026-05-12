@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-439fc48d.js";
+            window.path_to_searchindex_js = "../../searchindex-115dba3e.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -202,7 +202,7 @@
 <p>If a hash lock condition is present, the source <strong>A</strong> must then reveal the preimage of the hash lock to <strong>D</strong> via a <code>RevealSecret</code> message. The end-to-end setup is finalized once <strong>A</strong> receives the corresponding <code>RevealSecretAck</code> from <strong>D</strong>.</p>
 <h3 id="source-pays-in-full-amount-on-true-outcome"><a class="header" href="#source-pays-in-full-amount-on-true-outcome"><strong>Source pays in full amount on true outcome</strong></a></h3>
 <p>Once the conditional payment is successfully set up, the nodes along the route cooperatively settle the payment hop by hop.</p>
-<p>The figure below shows the message flow when the payment source initiates settlement by paying the full amount to its peer. This can occur immediately after <strong>A</strong> receives the <code>RevealSecretAck</code> for a payment protected by a single hash lock, or after the associated CelerApp boolean conditions are finalized (off-chain) as <em>true</em>.</p>
+<p>The figure below shows the message flow when the payment source initiates settlement by paying the full amount to its peer. This can occur immediately after <strong>A</strong> receives the <code>RevealSecretAck</code> for a payment protected by a single hash lock, or after the associated App boolean conditions are finalized (off-chain) as <em>true</em>.</p>
 <p><img src="../../.gitbook/assets/e2e-pay-full.png" alt=""><figcaption></figcaption></p>
 <p>As shown above, when the condition evaluates to <em>true</em>, settlement begins from the payment source (<strong>A</strong>) and proceeds downstream toward the destination (<strong>D</strong>).</p>
 <p>Each relay node (<strong>B</strong>, <strong>C</strong>) transfers the full amount to its downstream peer only after receiving the same amount from its upstream peer. This ensures that every relay can forward the payment safely without evaluating any conditions or making on-chain queries, preserving both simplicity and trustlessness.</p>
