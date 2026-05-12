@@ -129,8 +129,8 @@ All nodes involved in a routed payment reference the same result in **PayRegistr
 
 **PayResolver** updates the registry according to the following rules:
 
-* If the resolved amount equals the _maximum transferable amount_ from the `transfer_func` (field 5 of ConditionalPay), the result is immediately finalized.
-* Otherwise, a **challenge window** (field 7) opens, during which others may re-resolve the payment with additional evidence.
+* If the resolved amount equals `transfer_func.max_transfer` (field 2 of the [TransferFunction](core-data-structures.md#transfer-function) referenced by field 5 of ConditionalPay), the result is immediately finalized.
+* Otherwise, a **challenge window** (field 7 of ConditionalPay) opens, during which others may re-resolve the payment with additional evidence.
 
 During the challenge period, a result can only be updated **to a higher amount**, never lower—a protection mechanism for relay nodes aligned with off-chain protocol guarantees. The result becomes final when the challenge window closes or the resolve deadline passes, whichever comes first.
 

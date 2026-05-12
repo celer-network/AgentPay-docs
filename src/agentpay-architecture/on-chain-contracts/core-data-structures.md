@@ -42,8 +42,7 @@ message SimplexPaymentChannel {
 
 This protobuf representation is jointly used by both the off-chain protocol and the on-chain contracts across supported blockchains. A simplex state is _valid only if it is co-signed by both peers and has the highest sequence number_.
 
-Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer _A_ is:\
-`A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending` .
+Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer _A_ is: `A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending` .
 
 ### **List of pending pay IDs**
 
