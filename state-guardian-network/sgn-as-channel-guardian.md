@@ -49,7 +49,7 @@ This ensures no peer can block the channel closure by indefinitely vetoing settl
 
 ***
 
-## **Guardian Assignment and Incentives**
+## Guardian Assignment and Incentives
 
 SGN validators collectively serve as decentralized _channel guardians_, providing continuous on-chain monitoring and timely response services that protect AgentPay channels during dispute windows. Each validator independently tracks on-chain events and collectively reaches consensus within SGN when a guarded channel requires action.
 
@@ -85,7 +85,7 @@ This model ensures **trust-any safety** for users while preserving a **validator
 
 ***
 
-## **Security Model**
+## Security Model
 
 SGN provides **trust-minimized availability assurance** for AgentPay channels through a hybrid of BFT consensus and open validator participation.
 
@@ -101,7 +101,7 @@ This architecture combines **BFT-grade consistency** with **trust-any liveness**
 
 ***
 
-## **Scalability**
+## Scalability
 
 SGN scales horizontally by running **multiple parallel chains** under the same validator set and staking logic. Each chain provides an independent service—such as channel state guarding, or inter-chain bridging—and can process requests in parallel without shared global state or double-spend risks.
 
@@ -109,7 +109,7 @@ Even the channel guardian service can be sharded into many parallel sub-chains, 
 
 ***
 
-## **Integration with AgentPay and App Channels**
+## Integration with AgentPay and App Channels
 
 By serving as a **decentralized availability layer**, SGN completes the trustless lifecycle of AgentPay and App channels. AI Agents and human users alike can now participate in off-chain interactions — payments, cooperative apps, or verifiable computations — without maintaining continuous online presence or centralized custody. Once an Agent registers its guarded state, **SGN validators act as always-on watchers**, ensuring that no outdated or malicious state can ever be finalized on-chain.
 
