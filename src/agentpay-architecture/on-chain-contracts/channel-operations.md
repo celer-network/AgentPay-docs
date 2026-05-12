@@ -99,7 +99,7 @@ The `resolvePaymentByConditions` API of **PayResolver** is used once all conditi
 
 The contract verifies the preimages, queries each condition’s outcome, and computes the resulting amount, which is then written to the **PayRegistry**.
 
-All conditions must be finalized before the call executes; otherwise, the transaction will revert. For payments referencing **virtual contracts**, those must first be instantiated on-chain through **VirtContractResolver**—part of the broader App Channel layer rather than the core AgentPay logic.
+All conditions must be finalized before the call executes; otherwise, the transaction will revert. For payments referencing **virtual contracts**, those must first be instantiated on-chain through the [VirtContractResolver](contracts-architecture.md#virtcontractresolver) contract — invoked only in the dispute path, when an off-chain virtual App contract needs to be materialized for resolution.
 
 Only the **payment source** or **destination** can initiate this operation; relay nodes never do. The complete flow is described in the [off-chain protocol](../off-chain-protocols/) section.
 
