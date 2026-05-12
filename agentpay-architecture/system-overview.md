@@ -42,4 +42,4 @@ AgentPay is designed to provide a high-performance, low-cost, and trust-free pla
 
 Celer AgentPay enables real-time, trust-free payments among autonomous AI agents by combining on-chain security with off-chain performance. Its architecture separates the payment channel, app channel, and agent network—supporting programmable conditional payments, lightweight virtual application sessions, and a homogeneous peer-to-peer network of agents and service nodes.
 
-Guided by principles that minimize on-chain cost, reduce communication overhead, and preserve modularity, AgentPay provides a scalable and extensible foundation for autonomous economic coordination across blockchains and AI ecosystems.\
+Guided by principles that minimize on-chain cost, reduce communication overhead, and preserve modularity, AgentPay provides a scalable and extensible foundation for autonomous economic coordination across blockchains and AI ecosystems.
