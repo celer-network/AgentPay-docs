@@ -36,7 +36,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-115dba3e.js";
+            window.path_to_searchindex_js = "../../searchindex-be55977c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-893e7167.js"></script>
@@ -208,7 +208,7 @@ message SimplexPaymentChannel {
 }
 </code></pre>
 <p>This protobuf representation is jointly used by both the off-chain protocol and the on-chain contracts across supported blockchains. A simplex state is <em>valid only if it is co-signed by both peers and has the highest sequence number</em>.</p>
-<p>Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer <em>A</em> is:<br><code>A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending</code> .</p>
+<p>Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer <em>A</em> is: <code>A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending</code> .</p>
 <h3 id="list-of-pending-pay-ids"><a class="header" href="#list-of-pending-pay-ids"><strong>List of pending pay IDs</strong></a></h3>
 <p>Details of the payment-related fields in the simplex state (such as conditional payments) will be discussed <a href="core-data-structures.html#conditional-payment">later</a>. Here, we focus on how pending conditional payments are represented in field 5 of the simplex state.</p>
 <p>AgentPay does <strong>not</strong> rely on Merkle proofs to summarize pending payments, since maintaining a Merkle root for a rapidly changing dataset is computationally expensive and would require additional on-chain transactions during disputes.</p>

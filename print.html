@@ -37,7 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-115dba3e.js";
+            window.path_to_searchindex_js = "searchindex-be55977c.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-893e7167.js"></script>
@@ -265,7 +265,7 @@ message SimplexPaymentChannel {
 }
 </code></pre>
 <p>This protobuf representation is jointly used by both the off-chain protocol and the on-chain contracts across supported blockchains. A simplex state is <em>valid only if it is co-signed by both peers and has the highest sequence number</em>.</p>
-<p>Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer <em>A</em> is:<br><code>A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending</code> .</p>
+<p>Given two valid simplex states and the on-chain records of deposits and withdrawals, either peer’s balance can be deterministically computed at any time. For example, the available balance of peer <em>A</em> is: <code>A.available = A.deposit - A.withdraw + B.transfer - A.transfer - A.pending</code> .</p>
 <h3 id="list-of-pending-pay-ids"><a class="header" href="#list-of-pending-pay-ids"><strong>List of pending pay IDs</strong></a></h3>
 <p>Details of the payment-related fields in the simplex state (such as conditional payments) will be discussed <a href="#conditional-payment">later</a>. Here, we focus on how pending conditional payments are represented in field 5 of the simplex state.</p>
 <p>AgentPay does <strong>not</strong> rely on Merkle proofs to summarize pending payments, since maintaining a Merkle root for a rapidly changing dataset is computationally expensive and would require additional on-chain transactions during disputes.</p>
@@ -544,8 +544,8 @@ message CondPayResult {
 <p>All nodes involved in a routed payment reference the same result in <strong>PayRegistry</strong>, ensuring consistency and fairness even if the payment source and destination collude to submit conflicting results.</p>
 <p><strong>PayResolver</strong> updates the registry according to the following rules:</p>
 <ul>
-<li>If the resolved amount equals the <em>maximum transferable amount</em> from the <code>transfer_func</code> (field 5 of ConditionalPay), the result is immediately finalized.</li>
-<li>Otherwise, a <strong>challenge window</strong> (field 7) opens, during which others may re-resolve the payment with additional evidence.</li>
+<li>If the resolved amount equals <code>transfer_func.max_transfer</code> (field 2 of the <a href="#transfer-function">TransferFunction</a> referenced by field 5 of ConditionalPay), the result is immediately finalized.</li>
+<li>Otherwise, a <strong>challenge window</strong> (field 7 of ConditionalPay) opens, during which others may re-resolve the payment with additional evidence.</li>
 </ul>
 <p>During the challenge period, a result can only be updated <strong>to a higher amount</strong>, never lower—a protection mechanism for relay nodes aligned with off-chain protocol guarantees. The result becomes final when the challenge window closes or the resolve deadline passes, whichever comes first.</p>
 <hr>
