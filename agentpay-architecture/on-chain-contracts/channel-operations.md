@@ -60,7 +60,7 @@ Peers can withdraw funds from a channel at any time. **AgentPayLedger** supports
 * **Cooperative withdrawal** — completed instantly in a single transaction when both peers agree.
 * **Unilateral withdrawal** — used when a peer is unavailable, requiring two transactions and a challenge period.
 
-#### **Cooperative withdraw**
+#### Cooperative withdraw
 
 When both peers are online and cooperative, the withdrawer can execute a withdrawal in one transaction by calling the `cooperativeWithdraw` API and providing the co-signed message:
 
@@ -76,7 +76,7 @@ message CooperativeWithdrawInfo {
 
 Upon verification, **AgentPayLedger** transfers tokens from the channel’s **AgentPayWallet** either to the specified recipient account (field 3) or to another channel (field 5). This second option enables service nodes to quickly rebalance liquidity across multiple channels without first withdrawing on-chain.
 
-#### **Unilateral withdraw**
+#### Unilateral withdraw
 
 If a peer cannot reach its counterparty for co-signing, it can initiate a unilateral withdrawal using `intendWithdraw(channel_id, amount, recipient_channel_id)`. This starts a **challenge window**, during which the counterparty may call `vetoWithdraw` to dispute the request. Once the window closes without objection, the withdrawer finalizes the operation by calling `confirmWithdraw`.
 
@@ -90,7 +90,7 @@ When peers cannot cooperatively clear a payment off-chain, they can resolve it o
 
 Payments can be resolved either by evaluating their **conditions** or by submitting a **vouched result** co-signed by the source and destination.
 
-#### **Resolve payment by conditions**
+#### Resolve payment by conditions
 
 The `resolvePaymentByConditions` API of **PayResolver** is used once all conditions of a payment are finalized on-chain. The call includes:
 
@@ -140,7 +140,7 @@ During the challenge period, a result can only be updated **to a higher amount**
 
 A node can choose to **settle or close a channel** with its peer either **cooperatively** or **unilaterally**, similar to the withdrawal operation. Cooperative settling is preferred since it completes in a single transaction, while unilateral settling is used only when peers cannot agree or one party becomes unresponsive.
 
-#### **Cooperative Settle**
+#### Cooperative Settle
 
 The `cooperativeSettle` API in **AgentPayLedger** allows peers to close a channel instantly with a co-signed request containing the final balance distribution.
 
@@ -158,7 +158,7 @@ message CooperativeSettleInfo {
 
 Upon receiving a valid co-signed request, **AgentPayLedger** closes the channel and distributes balances according to field 3. All off-chain simplex states and pending conditional payments are ignored — the cooperative signature itself serves as the final agreement.
 
-#### **Unilateral Settle**
+#### Unilateral Settle
 
 If cooperation is not possible, a peer can initiate a unilateral settle by calling `intendSettle`, providing the latest co-signed off-chain simplex states as input. **AgentPayLedger** computes the final balance distribution using these states and the outcomes of pending payments retrieved from the **PayRegistry**.
 

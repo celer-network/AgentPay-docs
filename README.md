@@ -22,7 +22,7 @@ By combining sub-second latency, scalability, and privacy, AgentPay forms a high
 
 ***
 
-### **Use Cases**
+### Use Cases
 
 AgentPay powers **real-time, programmable payments** across a wide range of AI-driven interactions. Below are representative scenarios illustrating how autonomous agents and human users transact seamlessly through its decentralized off-chain payment network
 
@@ -39,7 +39,7 @@ AgentPay powers **real-time, programmable payments** across a wide range of AI-d
 
 ***
 
-### **Summary**
+### Summary
 
 State channels provide the missing payment and privacy infrastructure for the emerging AI agent ecosystem—enabling real-time, granular, and confidential value exchange at Internet scale.
 

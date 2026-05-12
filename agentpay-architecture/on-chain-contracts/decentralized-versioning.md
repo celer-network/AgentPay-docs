@@ -39,7 +39,7 @@ As introduced in Contracts Architecture, **AgentPayLedger** manages payment chan
 
 AgentPay allows **channel peers to cooperatively migrate** their AgentPayLedger to a new version while continuing to use the same wallet, with _zero off-chain downtime_.
 
-#### **AgentPayLedger migration process**
+#### AgentPayLedger migration process
 
 Migration requires mutual consent from both channel peers via a co-signed migration message:
 
@@ -65,7 +65,7 @@ As illustrated above, the migration consists of four inter-contract calls within
 
 A migration request has higher priority than `intendSettle`, meaning peers can migrate even if the channel is in a `Settling` state. Upon migration, the channel becomes `Operable` again. This enables **immediate off-chain upgrades with deferred on-chain finalization**: once a migration is co-signed, peers can begin operating under the new logic off-chain before the transaction is executed.
 
-#### **Zero-downtime upgrade flow**
+#### Zero-downtime upgrade flow
 
 Channel peers do not need to pause off-chain operations when migrating to a new AgentPayLedger version. The new logic becomes effective _as soon as the migration request is co-signed_, while the on-chain transition can be finalized later before the deadline. During this period, peers should monitor events from both the old and new ledgers.
 
@@ -73,7 +73,7 @@ If the `SimplexPaymentChannel` message format remains unchanged, peers only need
 
 If the proto definition changes, peers must first co-sign equivalent states using the new format (representing the same balances as the old states), then co-sign the migration request and continue under the new logic.
 
-#### **Manual fallback upgrade**
+#### Manual fallback upgrade
 
 In rare cases where automated migration fails (e.g., due to critical ledger bugs), peers can still cooperatively update the wallet operator through `AgentPayWallet.proposeNewOperator`. If all owners agree on the new operator, the wallet updates accordingly. This manual path should only be used as a last resort.
 
